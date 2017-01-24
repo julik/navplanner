@@ -21,6 +21,11 @@ module Haversine
     num / RAD_PER_DEG
   end
   
+  def self.magvar_at(pt)
+    magvar_rads = Magvar.magvar(rpd(pt.lat), rpd(pt.lon), Time.utc(2020,1,1), 0)
+    dpr(magvar_rads)
+  end
+  
   def self.true_bearing(from, to)
     lat1, lon1, lat2, lon2 = rpd(from.lat), rpd(from.lon), rpd(to.lat), rpd(to.lon)
     

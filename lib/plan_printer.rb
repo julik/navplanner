@@ -6,7 +6,7 @@ module PlanPrinter
     total_dist_km = legs.map(&:dist_km).inject(&:+)
     total_dist_nm = legs.map(&:dist_nm).inject(&:+)
     target.puts "%s > %s (%d KM / %d NM" % [legs.first.from.ident, legs.last.to.ident, total_dist_km, total_dist_nm]
-
+    
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
   
@@ -34,11 +34,14 @@ module PlanPrinter
       end
     end
 
-    target.puts table
-    
-    merc = Haversine.meridian_convergence_deg(legs[0].from, legs[-1].to)
+    first_wpt, last_wpt = legs[0].from, legs[-1].to
+    merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
     target.puts "MERIDIAN CONVERGENCE DIFF (TRUE):       % 3.1f      " % merc
-    target.puts "MERIDIAN CONVERGENCE ADJ   (MAG): % 3.1f  % 3.1f % 3.1f" % [0,merc,0]
+
+    m_f = Haversine.magvar_at(first_wpt)
+    m_t = Haversine.magvar_at(last_wpt)
+    merc_mag = m_f - m_t + merc  
+    target.puts "MERIDIAN CONVERGENCE ADJ   (MAG): % 3.1f  % 3.1f % 3.1f" % [m_f,merc_mag,m_t]
   end
   
   def degrees(degrees)
