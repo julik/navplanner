@@ -1,3 +1,4 @@
+*.marshal # Cached nav data
 .DS_Store
 **/.DS_Store
 pkg
