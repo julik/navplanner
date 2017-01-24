@@ -1,6 +1,8 @@
+require 'terminal-table'
+
 module PlanPrinter
-  def self.print_plan(legs, target=$stdout)
-    require 'terminal-table'
+  extend self
+  def print_plan(legs, target=$stdout)
     total_dist_km = legs.map(&:dist_km).inject(&:+)
     total_dist_nm = legs.map(&:dist_nm).inject(&:+)
     target.puts "%s > %s (%d KM / %d NM" % [legs.first.from.ident, legs.last.to.ident, total_dist_km, total_dist_nm]
@@ -13,21 +15,39 @@ module PlanPrinter
       legs.each do |leg|
         from, to = leg.from, leg.to
 
-        rad = if to.respond_to?(:freq_int)
+        radio = if to.respond_to?(:freq_int)
           "%s %s %d (%s)" % [to.class, to.ident, to.freq_int, to.name]
         else
           '-'
         end
     
-        t << [from.ident, to.ident, "%0.1f" % leg.bearing, "%0.1f" % leg.inbound_bearing, "%0.1f" % leg.gc_bearing_from(initial_from), leg.dist_km, leg.dist_nm, rad]
+        t << [
+          from.ident,
+          to.ident,
+          degrees_with_minutes(leg.bearing),
+          degrees_with_minutes(leg.inbound_bearing),
+          degrees_with_minutes(leg.gc_bearing_from(initial_from)),
+          leg.dist_km,
+          leg.dist_nm,
+          radio,
+        ]
       end
     end
 
     target.puts table
     
     merc = Haversine.meridian_convergence_deg(legs[0].from, legs[-1].to)
-    merc = 189
     target.puts "MERIDIAN CONVERGENCE DIFF (TRUE):       % 3.1f      " % merc
     target.puts "MERIDIAN CONVERGENCE ADJ   (MAG): % 3.1f  % 3.1f % 3.1f" % [0,merc,0]
+  end
+  
+  def degrees(degrees)
+    "%03.1f°" % [degrees]
+  end
+
+  def degrees_with_minutes(degrees)
+    whole, fraction = degrees.divmod(1)
+    minutes = (fraction * 60).to_i
+    "%03d° %02d'" % [whole, minutes]
   end
 end
