@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+Dir.glob(__dir__ + '/../lib/*.rb').each {|p| require p }
+
+pln = ARGV.to_a
+raise "No waypoints given (give them as commandline args)" if pln.empty?
+raise "Need at least 2 waypoints" if pln.length < 2
+
+db = NavDB.new(ParserLoader.load_cache)
+legs = Planner.wyaypoint_list_to_legs(db, pln)
+PlanPrinter.print_plan(legs, $stdout)
+
