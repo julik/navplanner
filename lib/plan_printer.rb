@@ -24,24 +24,25 @@ module PlanPrinter
         t << [
           from.ident,
           to.ident,
-          degrees_with_minutes(leg.bearing),
-          degrees_with_minutes(leg.inbound_bearing),
-          degrees_with_minutes(leg.gc_bearing_from(initial_from)),
+          degrees(leg.bearing),
+          degrees(leg.inbound_bearing),
+          degrees(leg.gc_bearing_from(initial_from)),
           leg.dist_km,
           leg.dist_nm,
           radio,
         ]
       end
     end
-
+    target.puts table
+    
     first_wpt, last_wpt = legs[0].from, legs[-1].to
     merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
-    target.puts "MERIDIAN CONVERGENCE DIFF (TRUE):       % 3.1f      " % merc
+    target.puts "MERIDIAN CONVERGENCE DIFF (TRUE) :       % 3.1f      " % merc
 
     m_f = Haversine.magvar_at(first_wpt)
     m_t = Haversine.magvar_at(last_wpt)
     merc_mag = m_f - m_t + merc  
-    target.puts "MERIDIAN CONVERGENCE ADJ   (MAG): % 3.1f  % 3.1f % 3.1f" % [m_f,merc_mag,m_t]
+    target.puts "MAGNETIC CONVERGENCE (Mf/FORK/Mt): % 3.1f  % 3.1f % 3.1f" % [m_f,merc_mag,m_t]
   end
   
   def degrees(degrees)
