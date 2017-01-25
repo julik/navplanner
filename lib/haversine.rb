@@ -1,7 +1,23 @@
 module Haversine
+  extend self
+  
   RAD_PER_DEG = Math::PI / 180
+  GREAT_CIRCLE_RADIUS_MILES = 3956
+  GREAT_CIRCLE_RADIUS_KILOMETERS = 6371 # some algorithms use 6367
+  GREAT_CIRCLE_RADIUS_FEET = GREAT_CIRCLE_RADIUS_MILES * 5280
+  GREAT_CIRCLE_RADIUS_METERS = GREAT_CIRCLE_RADIUS_KILOMETERS * 1000
+  GREAT_CIRCLE_RADIUS_NAUTICAL_MILES = GREAT_CIRCLE_RADIUS_MILES / 1.15078
+  
+  def rad_to_nm(dist_rads)
+    (dist_rads * GREAT_CIRCLE_RADIUS_NAUTICAL_MILES)
+  end
+  
+  def rad_to_km(dist_rads)
+    (dist_rads * GREAT_CIRCLE_RADIUS_KILOMETERS)
+  end
+  
   # given two lat/lon points, compute the distance between the two points using the haversine formula
-  def self.distance(from, to)
+  def distance(from, to)
     lat1, lon1 = from.lat, from.lon
     lat2, lon2 = to.lat, to.lon
     
@@ -13,20 +29,20 @@ module Haversine
   end
 
   # Radians per degree
-  def self.rpd(num)
+  def rpd(num)
     num * RAD_PER_DEG
   end
   
-  def self.dpr(num)
+  def dpr(num)
     num / RAD_PER_DEG
   end
   
-  def self.magvar_at(pt)
+  def magvar_at(pt)
     magvar_rads = Magvar.magvar(rpd(pt.lat), rpd(pt.lon), Time.utc(2020,1,1), 0)
     dpr(magvar_rads)
   end
   
-  def self.true_bearing(from, to)
+  def true_bearing(from, to)
     lat1, lon1, lat2, lon2 = rpd(from.lat), rpd(from.lon), rpd(to.lat), rpd(to.lon)
     
     deltaL = lon2 - lon1;
@@ -44,16 +60,16 @@ module Haversine
   
   # Gives the meridian convergence angle that has to be added (or subtracted)
   # when moving from the "from" point to the "to" point
-  def self.meridian_convergence_deg(from, to)
+  def meridian_convergence_deg(from, to)
     bearing = true_bearing(from, to)
     bearing_diff = (from.lon - to.lon) * Math.sin((Haversine.rpd(from.lat) + Haversine.rpd(to.lat)) / 2)
   end
    
-  def self.inverse(deg)
+  def inverse(deg)
     normalize(deg + 180.0)
   end
 
-  def self.normalize(deg)
+  def normalize(deg)
     deg = deg % 360.0
     if deg < 0
       360 + deg

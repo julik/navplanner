@@ -1,6 +1,18 @@
 module ParserLoader
   extend self
   
+  def parse_rsbn(points)
+    nav_dat = File.join(__dir__, 'rsbn.dat')
+    File.open(nav_dat, 'rb') do |f|
+      f.each_line do |line|
+        next if line.strip.empty?
+        chan, name, ident, _, lat, lon, elev_mtr = line.strip.split('|')
+        beacon = RSBN.new(lat.to_f, lon.to_f, ident, name, chan, elev_mtr.to_f)
+        points << beacon
+      end
+    end
+  end
+
   def parse_navaids(points)
     nav_dat = File.join(ENV.fetch('X_PLANE_INSTALL_PATH'), 'Resources/default data/earth_nav.dat')
     File.open(nav_dat, 'rb') do |f|
@@ -94,7 +106,8 @@ module ParserLoader
     parser_threads = [
       Thread.new { parse_navaids(points) },
       Thread.new { parse_fixes(points) },
-      Thread.new { parse_airports(points) }
+      Thread.new { parse_airports(points) },
+      Thread.new { parse_rsbn(points) },
     ]
     parser_threads.map(&:join)
     $stderr.puts "Found %d navaids, fixes and airports" % points.length

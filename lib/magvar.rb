@@ -89,7 +89,7 @@ module Magvar
     n, m = 0, 0
     #    /* reference dates */
     #    long date0_wmm2015 = yymmdd_to_julian_days(5,1,1);
-    date0_wmm2015 = yymmdd_to_julian_days(15,1,1)
+    date0_wmm2015 = yymmdd_to_julian_days(5,1,1)
     #
     #    double yearfrac,sr,r,theta,c,s,psi,fn,t_B_r,t_B_theta,t_B_phi,X,Y,Z;
     
