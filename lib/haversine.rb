@@ -38,7 +38,7 @@ module Haversine
   end
   
   def magvar_at(pt)
-    magvar_rads = Magvar.magvar(rpd(pt.lat), rpd(pt.lon), Time.utc(2020,1,1), 0)
+    magvar_rads = Magvar.magvar(rpd(pt.lat), rpd(pt.lon), Time.utc(2020,1,1), 100)
     dpr(magvar_rads)
   end
   

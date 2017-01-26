@@ -1,3 +1,6 @@
+require_relative 'haversine'
+require_relative 'leg'
+
 class NVUCorrection < Struct.new(:map_angle, :s_km, :z_km)
   def self.compute(leg, beacon)
     # Determine the map angle. It is the same as the inbound (!) bearing of the
@@ -36,4 +39,5 @@ if __FILE__ == $0
   leg = Leg.new(from, to)
   
   corr = NVUCorrection.compute(leg, beacon)
+  raise corr.inspect
 end

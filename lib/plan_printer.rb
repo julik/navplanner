@@ -5,12 +5,24 @@ module PlanPrinter
   def print_plan(legs, target=$stdout)
     total_dist_km = legs.map(&:dist_km).inject(&:+)
     total_dist_nm = legs.map(&:dist_nm).inject(&:+)
+
+    target.puts "FPL NOT FOR REAL NAVIGATION"
     target.puts "%s > %s (%d KM / %d NM" % [legs.first.from.ident, legs.last.to.ident, total_dist_km, total_dist_nm]
     
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
   
-      t << %w( FROM TO MD TK.OUTB(TRUE) BRG.INB(TRUE) TK.OUTB(GC) DIST(KM) DIST(NM) RADIO)
+      t << %w(
+        FROM
+        TO
+        MD
+        TK.OUTB(TRUE)
+        BRG.INB(TRUE)
+        TK.OUTB(GC)
+        DIST(KM)
+        DIST(NM)
+        RADIO
+      )
       t.add_separator
       legs.each do |leg|
         from, to = leg.from, leg.to
@@ -31,19 +43,11 @@ module PlanPrinter
           "%0.1f" % leg.dist_km,
           "%0.1f" % leg.dist_nm,
           radio,
+          
         ]
       end
     end
     target.puts table
-    
-    first_wpt, last_wpt = legs[0].from, legs[-1].to
-    merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
-    target.puts "MERIDIAN CONVERGENCE DIFF (TRUE) :       % 3.1f      " % merc
-
-    m_f = first_wpt.magnetic_variation
-    m_t = last_wpt.magnetic_variation
-    merc_mag = m_f - m_t + merc  
-    target.puts "MAGNETIC CONVERGENCE (Mf/FORK/Mt): % 3.1f  % 3.1f % 3.1f" % [m_f,merc_mag,m_t]
   end
   
   def degrees(degrees)
