@@ -4,8 +4,8 @@ module PointInfo
   end
   
   def magnetic_variation
-    magvar_rads = Magvar.magvar(Haversine.rpd(lat), Haversine.rpd(lon), Time.utc(2020,1,1),1000)
-    Haversine.dpr(magvar_rads)
+    var_r = Magvar.variation_at(Haversine.rpd(lat), Haversine.rpd(lon), 0)
+    Haversine.dpr(var_r)
   end
 end
 

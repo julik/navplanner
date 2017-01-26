@@ -54,7 +54,7 @@ module NVUPrinter
 
     m_f = first_wpt.magnetic_variation
     m_t = last_wpt.magnetic_variation
-    merc_mag = m_f - m_t + merc  
+    merc_mag = m_f - m_t - merc  
     target.puts "MAGNETIC CONVERGENCE (Mf/FORK/Mt): % 3.1f  % 3.1f % 3.1f" % [m_f,merc_mag,m_t]
   end
   
