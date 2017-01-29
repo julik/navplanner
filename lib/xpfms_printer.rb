@@ -5,7 +5,7 @@ module XPFMSPrinter
     target.puts 'I'
     target.puts '3 version'
     target.puts '1'
-    target.puts '1'
+    target.puts '%d' % legs.length
     leg_waypoints(legs).each do |wpt|
       print_wpt(wpt, target)
     end
