@@ -18,7 +18,6 @@ module PlanPrinter
         MD
         TK.OUTB(TRUE)
         BRG.INB(TRUE)
-        TK.OUTB(GC)
         DIST(KM)
         DIST(NM)
         RADIO
@@ -39,7 +38,6 @@ module PlanPrinter
           degrees(from.magnetic_variation),
           degrees(leg.bearing_from),
           degrees(leg.bearing_to),
-          degrees_with_minutes(leg.gc_bearing_from(initial_from)),
           "%0.1f" % leg.dist_km,
           "%0.1f" % leg.dist_nm,
           radio,
