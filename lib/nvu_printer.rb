@@ -1,11 +1,15 @@
 module NVUPrinter
   extend self
   def print_plan(legs, beacons, target=$stdout)
-    target.puts "NVU WAYPOINT LIST"
     
     first_wpt, last_wpt = legs[0].from, legs[-1].to
+    
     magdec_from = first_wpt.magnetic_variation
     magdec_to = last_wpt.magnetic_variation
+    merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
+    
+    fork_magnetic = merc_mag = magdec_from - magdec_to - merc
+    target.puts "NVU WAYPOINT LIST (FORK %0.1f°)" % fork_magnetic
     
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
@@ -55,12 +59,7 @@ module NVUPrinter
       end
     end
     target.puts table
-
-    merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
     target.puts "MERIDIAN CONVERGENCE DIFF (TRUE) :       % 3.1f      " % merc
-
-    merc_mag = magdec_from - magdec_to - merc  
-    target.puts "MAGNETIC CONVERGENCE (Mf/FORK/Mt): % 3.1f  % 3.1f % 3.1f" % [magdec_from,merc_mag,magdec_to]
   end
   
   class DW < Struct.new(:beacon, :distance)
