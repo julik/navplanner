@@ -8,7 +8,7 @@ pln = ARGV.to_a
 raise "No waypoints given (give them as commandline args)" if pln.empty?
 raise "Need at least 2 waypoints" if pln.length < 2
 
-xp_path = ENV.fetch('X_PLANE_DIRECTORY') { File.join(__dir__, '/../spec/test_xp_data_20170129') }
+xp_path = ENV.fetch('X_PLANE_INSTALL_PATH') { File.join(__dir__, '/../spec/test_xp_data_20170129') }
 parser = ParserLoader.new(xp_path)
 
 db = NavDB.new(parser.load_cache)
