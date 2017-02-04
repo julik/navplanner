@@ -559,15 +559,17 @@ double SGMagVarOrig( double lat, double lon, double h, long dat, double* field )
  * jd:: Julian date
  * Returns a two-element array, [var, dip] (radians)
  */
-static VALUE rb_magvar(VALUE self, VALUE lat, VALUE lon, VALUE alt)
+static VALUE rb_magvar(VALUE self, VALUE radian_lat, VALUE radian_lon, VALUE alt_mtr_msl)
 {
-    double clat = NUM2DBL(lat);
-    double clon = NUM2DBL(lon);
-    double calt = NUM2DBL(alt);
-		// Assume X-Plane magvar date to be 2020-1-1
-		long cjd = yymmdd_to_julian_days(20, 1, 1);
-		
-    double var = calc_magvar(clat, clon, cjd, 0);
+    double clat = NUM2DBL(radian_lat);
+    double clon = NUM2DBL(radian_lon);
+    double calt = NUM2DBL(alt_mtr_msl);
+    
+    // Assume X-Plane magvar date to be 2020-1-1
+    long cjd = yymmdd_to_julian_days(20, 1, 1);
+    
+    // Compute the variation
+    double var = calc_magvar(clat, clon, cjd, calt);
 
     return rb_float_new(var);
 }

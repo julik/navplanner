@@ -11,6 +11,10 @@ module NVUPrinter
     fork_magnetic = merc_mag = magdec_from - magdec_to - merc
     target.puts "NVU WAYPOINT LIST (FORK %0.1f°)" % fork_magnetic
     
+    merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
+    merc_mag = magdec_from - magdec_to - merc
+    target.puts "FORK DEG: %3.1f" % [merc_mag]
+    
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
   
@@ -59,7 +63,6 @@ module NVUPrinter
       end
     end
     target.puts table
-    target.puts "MERIDIAN CONVERGENCE DIFF (TRUE) :       % 3.1f      " % merc
   end
   
   class DW < Struct.new(:beacon, :distance)

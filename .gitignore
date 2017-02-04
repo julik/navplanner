@@ -1,3 +1,8 @@
+ext/*.o
+ext/*.a
+lib/*.bundle
+lib/*.so
+lib/*.dll
 *.marshal
 **/*.marshal # Cached nav data
 .DS_Store
@@ -14,3 +19,4 @@ Gemfile.lock
 **/*.log
 .ruby-version
 scratchpad
+tmp
