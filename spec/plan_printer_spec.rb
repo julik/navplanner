@@ -31,6 +31,5 @@ describe PlanPrinter do
     end
     out = StringIO.new
     PlanPrinter.print_plan(legs, out)
-    puts out.string
   end
 end
