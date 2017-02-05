@@ -49,6 +49,13 @@ describe Navlister do
         pth = f.path
         expect(File).to be_exist(pth)
       end
+      
+      fp = detected.fingerprint
+      expect(fp).to be_kind_of(String)
+      expect(fp).not_to be_empty
+      10.times do 
+        expect(detected.fingerprint).to eq(fp)
+      end
     end
   end
   
@@ -61,5 +68,12 @@ describe Navlister do
     expect(detected.airway_files).not_to be_empty
     expect(detected.navaid_files).not_to be_empty
     expect(detected.fix_files).not_to be_empty
+    
+    fp = detected.fingerprint
+    expect(fp).to be_kind_of(String)
+    expect(fp).not_to be_empty
+    10.times do 
+      expect(detected.fingerprint).to eq(fp)
+    end
   end
 end

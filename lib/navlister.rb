@@ -1,5 +1,18 @@
+require 'digest'
+
 class Navlister
-  class NavdataState < Struct.new(:airway_files, :navaid_files, :airport_files, :fix_files); end
+  class NavdataState < Struct.new(:airway_files, :navaid_files, :airport_files, :fix_files)
+    def fingerprint
+      data = []
+      (airway_files + navaid_files + fix_files + airway_files).each do |f|
+        data << f.path
+        data << f.size
+        data << File.mtime(f.path)
+      end
+      Digest::SHA1.hexdigest(Marshal.dump(data))
+    end
+  end
+  
   class NavDataFile < Struct.new(:path, :size); end
   
   def initialize(xp_dir_path)
