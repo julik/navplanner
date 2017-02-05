@@ -4,7 +4,7 @@ class ParserLoader
 
   def initialize(path_to_xplane_dir, logger=Logger.new($stderr))
     @logger = logger
-    @xp_path = File.expand_path(path_to_xplane_dir)
+    @lister = Navlister.new(path_to_xplane_dir)
   end
 
   def parse_rsbn(points)
@@ -23,11 +23,11 @@ class ParserLoader
   end
 
   def parse_navaids(points)
-    nav_paths = Dir.glob(File.join(@xp_path, '**/earth_nav.dat'))
-    nav_paths.each do |path|
+    @detected ||= @lister.detect
+    @detected.navaid_files.each do |f|
       pts_before = points.length
-      File.open(path, 'rb') do |f|
-        @logger.info { "Parsing %s" % path }
+      File.open(f.path, 'rb') do |f|
+        @logger.info { "Parsing %s" % f.path }
         
         3.times { f.gets }
         while line = f.gets
@@ -67,11 +67,11 @@ class ParserLoader
   end
   
   def parse_fixes(points)
-    fix_paths = Dir.glob(File.join(@xp_path, '**/earth_fix.dat'))
-    fix_paths.each do |fix_dat_path|
-      @logger.info { "Parsing %s" % fix_dat_path }
+    @detected ||= @lister.detect
+    @detected.fix_files.each do |f|
+      @logger.info { "Parsing %s" % f.path }
       pts_before = points.length
-      File.open(fix_dat_path, 'rb') do |f|
+      File.open(f.path, 'rb') do |f|
         3.times { f.gets }
         while line = f.gets
           break if line.strip == '99'
@@ -84,11 +84,11 @@ class ParserLoader
   end
   
   def parse_airports(points)
-    apt_paths = Dir.glob(File.join(@xp_path, '**/apt.dat'))
-    apt_paths.each do |apt_dat_path|
-      @logger.info { "Parsing %s" % apt_dat_path }
+    @detected ||= @lister.detect
+    @detected.airport_files.each do |f|
+      @logger.info { "Parsing %s" % f.path }
       pts_before = points.length
-      File.open(apt_dat_path, 'rb') do |f|
+      File.open(f.path, 'rb') do |f|
         3.times { f.gets }
         last_apt = nil
         defining_lats = []
@@ -123,7 +123,7 @@ class ParserLoader
           end
         end
       end
-      @logger.info { "Loaded %d items" % (points.length - pts_before) }
+      @logger.info { "Loaded %d items from %s" % [(points.length - pts_before), f.path] }
     end
   end
 
