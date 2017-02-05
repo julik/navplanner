@@ -14,6 +14,9 @@ describe Navlister do
       File.open(File.join(tmpdir, 'global nav data', 'earth_awy.dat'), 'wb') do |f|
         f << 'very long nav data'
       end
+      File.open(File.join(tmpdir, 'global nav data', 'earth_fix.dat'), 'wb') do |f|
+        f << 'very long nav data'
+      end
 
       FileUtils.mkdir_p(File.join(tmpdir, 'AAAA Some Airport'))
       File.open(File.join(tmpdir, 'AAAA Some Airport', 'apt.dat'), 'wb') do |f|
@@ -30,7 +33,7 @@ describe Navlister do
       end
 
       expect(detected.airway_files.length).to eq(1)
-      detected.apt_files.each do |f|
+      detected.airway_files.each do |f|
         pth = f.path
         expect(File).to be_exist(pth)
       end
@@ -46,7 +49,17 @@ describe Navlister do
         pth = f.path
         expect(File).to be_exist(pth)
       end
-        
     end
+  end
+  
+  it 'finds the files in the test directory' do
+    td = File.join(__dir__, 'test_xp_data_20170129')
+
+    lister = Navlister.new(td)
+    detected = lister.detect
+#    expect(detected.airport_files).not_to be_empty
+    expect(detected.airway_files).not_to be_empty
+    expect(detected.navaid_files).not_to be_empty
+    expect(detected.fix_files).not_to be_empty
   end
 end

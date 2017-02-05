@@ -9,7 +9,7 @@ class Navlister
   def detect
     # Always sort 
     nav_files = list_with_class('**/earth_nav.dat')
-    awy_files = list_with_class('**/earh_awy.dat')
+    awy_files = list_with_class('**/earth_awy.dat')
     apt_files = list_with_class('**/apt.dat')
     fix_files = list_with_class('**/earth_fix.dat')
     NavdataState.new(awy_files, nav_files, apt_files, fix_files)
