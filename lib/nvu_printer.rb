@@ -42,7 +42,7 @@ class NVUPrinter
           row += [
             corr_beacon,
             degrees_with_minutes(corr.map_angle),
-            "%0.1f/%0.1f" % [corr.s_km, corr.z_km],
+            "%0.1f/%0.1f" % [corr.z_km, corr.s_km],
           ]
         else
           row += ['-', '-', '-/-']
