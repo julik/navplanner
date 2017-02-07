@@ -1,15 +1,18 @@
 module NVUPrinter
   extend self
   def print_plan(legs, beacons, target=$stdout)
-    
+    target.puts "NVU WAYPOINT LIST"
+
     first_wpt, last_wpt = legs[0].from, legs[-1].to
-    
+
+    median_phi = Haversine.dpr((Haversine.rpd(first_wpt.lat) + Haversine.rpd(last_wpt.lat)) / 2)
+
     magdec_from = first_wpt.magnetic_variation
     magdec_to = last_wpt.magnetic_variation
     merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
-    
     fork_magnetic = merc_mag = magdec_from - magdec_to - merc
-    target.puts "NVU WAYPOINT LIST (FORK %0.1f°)" % fork_magnetic
+
+    target.puts "MEDIAN TKS 𝞅 %0.1f, TKS ADJUSTMENT FORK %0.1f" % [median_phi, fork_magnetic]
     
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
