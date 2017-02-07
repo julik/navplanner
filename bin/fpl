@@ -20,4 +20,7 @@ PlanPrinter.print_plan(legs, $stdout)
 # Print a palette report for NVU use
 beacon_list = db.of_class(RSBN)
 NVUPrinter.new.print_plan(legs, beacon_list, $stdout)
-XPFMSPrinter.print_plan(legs, $stdout)
+
+File.open(File.join(xp_path, 'Output/FMS plans/KLN 90B/25.fms'), 'wb') do |f|
+  XPFMSPrinter.print_plan(legs, f)
+end

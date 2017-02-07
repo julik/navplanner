@@ -17,30 +17,23 @@ class NVUPrinter
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
   
-      t << %w(
-        FROM
-        TO
-        MD
-        OZPU(T)
-        OZPU(Mf)
-        OZPU(Mt)
-        DIST(KM)
-        RSBN\ CORRECTION\ BCN
-        MAP\ ANGLE
-        Sm/Zm
-        RADIO
-      )
+      t << [
+        'LEG',
+        'OZMPU(DEP/DEST)',
+        'DIST(KM)',
+        'RSBN CORR',
+        'MAP ANGLE',
+        'Zm/Sm',
+        'DEST RADIO',
+        'MAGVAR (FROM/TO)',
+      ]
       t.add_separator
       legs.each do |leg|
         from, to = leg.from, leg.to
         gc_bearing = leg.gc_bearing_from(initial_from)
         row = [
-          from.ident,
-          to.ident,
-          decimal_degrees(from.magnetic_variation),
-          degrees_with_minutes(gc_bearing),
-          degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from)),
-          degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from - magdec_to)),
+          '% 6s TO %s' % [from.ident, to.ident],
+          "%s / %s" % [degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from)), degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from - magdec_to))],
           "%0.1f" % leg.dist_km,
         ]
         
@@ -57,6 +50,8 @@ class NVUPrinter
 
         radio = to.radio? ? to.to_s : '-'
         row << radio
+
+        row << "%s - %s" % [decimal_degrees(from.magnetic_variation), decimal_degrees(to.magnetic_variation)]
 
         t << row
       end
