@@ -1,6 +1,18 @@
 require 'spec_helper'
 
 describe CoordinateFormatting do
+  describe 'decimal_degrees' do
+    it 'converts neg. degrees to positive' do
+      expect(CoordinateFormatting.decimal_degrees(-10)).to eq('350.0°')
+    end
+  end
+
+  describe 'degrees_with_minutes' do
+    it 'converts neg. degrees to positive' do
+      expect(CoordinateFormatting.degrees_with_minutes(-10.3)).to eq('349°42′')
+    end
+  end
+  
   describe 'latitude' do
     it 'formats latitude north and south' do
       lat1 = 14.56897
