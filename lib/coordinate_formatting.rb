@@ -8,7 +8,7 @@ module CoordinateFormatting
     degrees = degrees_float.floor
     minutes = (60 * (degrees_float - degrees)).round
     
-    '%03d°%03d′' % [degrees, minutes]
+    '%03d°%02d′' % [degrees, minutes]
   end
   
   def longitude(degrees_float)
