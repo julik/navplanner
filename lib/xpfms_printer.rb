@@ -1,7 +1,7 @@
 module XPFMSPrinter
   extend self
 
-  def print_plan(legs, beacons, target=$stdout)
+  def print_plan(legs, target=$stdout)
     target.puts 'I'
     target.puts '3 version'
     target.puts '1'
