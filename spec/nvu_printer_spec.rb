@@ -29,7 +29,9 @@ describe NVUPrinter do
     each_pair.call(wpts) do |from, to|
       legs << Leg.new(from, to)
     end
+
     out = StringIO.new
-    NVUPrinter.print_plan(legs, out)
+    p = NVUPrinter.new
+    p.print_plan(legs, out)
   end
 end

@@ -19,5 +19,5 @@ PlanPrinter.print_plan(legs, $stdout)
 
 # Print a palette report for NVU use
 beacon_list = db.of_class(RSBN)
-NVUPrinter.print_plan(legs, beacon_list, $stdout)
+NVUPrinter.new.print_plan(legs, beacon_list, $stdout)
 XPFMSPrinter.print_plan(legs, $stdout)

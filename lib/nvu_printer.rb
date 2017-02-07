@@ -1,5 +1,5 @@
-module NVUPrinter
-  extend self
+class NVUPrinter
+  include CoordinateFormatting
   def print_plan(legs, beacons, target=$stdout)
     target.puts "NVU WAYPOINT LIST"
 
@@ -37,7 +37,7 @@ module NVUPrinter
         row = [
           from.ident,
           to.ident,
-          degrees(from.magnetic_variation),
+          decimal_degrees(from.magnetic_variation),
           degrees_with_minutes(gc_bearing),
           degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from)),
           degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from - magdec_to)),
@@ -82,15 +82,5 @@ module NVUPrinter
     return if distances.empty?
     
     closest = distances.min_by(&:distance).beacon
-  end
-
-  def degrees(degrees)
-    "%03.1f°" % [degrees]
-  end
-
-  def degrees_with_minutes(degrees)
-    whole, fraction = degrees.divmod(1)
-    minutes = (fraction * 60).to_i
-    "%03d° %02d'" % [whole, minutes]
   end
 end
