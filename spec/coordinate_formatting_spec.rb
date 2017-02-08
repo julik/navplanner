@@ -21,6 +21,14 @@ describe CoordinateFormatting do
       lat2 = -89.32
       expect(CoordinateFormatting.latitude(lat2)).to eq("S89°19′11″")
     end
+    
+    it 'flips the latitude at poles' do
+      lat1 = 95.56897
+      expect(CoordinateFormatting.latitude(lat1)).to eq("N84°25′51″")
+      
+      lat2 = -128.32
+      expect(CoordinateFormatting.latitude(lat2)).to eq("S51°40′48″")
+    end
   end
 
   describe 'longitude' do
@@ -30,6 +38,14 @@ describe CoordinateFormatting do
       
       lon2 = -89.32
       expect(CoordinateFormatting.longitude(lon2)).to eq("W089°19′11″")
+    end
+    
+    it 'flips the longitude at the international date line' do
+      lon1 = 192.56897
+      expect(CoordinateFormatting.longitude(lon1)).to eq("W167°25′51″")
+      
+      lon2 = -192.56897
+      expect(CoordinateFormatting.longitude(lon2)).to eq("E167°25′51″")
     end
   end
 

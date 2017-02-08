@@ -20,12 +20,14 @@ module CoordinateFormatting
   end
   
   def longitude(degrees_float)
+    degrees_float = normalize_latlon(degrees_float, 180)
     pole = degrees_float < 0 ? :W : :E
     whole, minutes, seconds = degree_fractions(degrees_float.abs)
     '%s%03d°%02d′%02d″' % [pole, whole, minutes, seconds]
   end
   
   def latitude(degrees_float)
+    degrees_float = normalize_latlon(degrees_float, 90)
     pole = degrees_float < 0 ? :S : :N
     whole, minutes, seconds = degree_fractions(degrees_float.abs)
     '%s%02d°%02d′%02d″' % [pole, whole, minutes, seconds]
@@ -36,5 +38,15 @@ module CoordinateFormatting
     minutes = (60 * (degrees_float - degrees)).floor
     seconds = 3600 * (degrees_float - degrees) - 60 * minutes
     [degrees, minutes, seconds]
+  end
+  
+  def normalize_latlon(degrees_float, rollover_value)
+    if degrees_float > rollover_value
+      -rollover_value + (degrees_float.abs % rollover_value)
+    elsif degrees_float < -rollover_value
+      rollover_value - (degrees_float.abs % rollover_value)
+    else
+      degrees_float
+    end
   end
 end
