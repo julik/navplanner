@@ -13,11 +13,9 @@ module PlanPrinter
       initial_from = legs.first.from
   
       t << %w(
-        FROM
-        TO
-        MD
+        LEG
         TK.OUTB(TRUE)
-        BRG.INB(TRUE)
+        TK.INB(TRUE)
         DIST(KM)
         DIST(NM)
         RADIO
@@ -33,12 +31,9 @@ module PlanPrinter
         end
     
         t << [
-          from.ident,
-          to.ident,
-          degrees(from.magnetic_variation),
+          '%s TO %s' % [from.ident, to.ident],
           degrees(leg.outbound_tk),
           degrees(leg.inbound_tk),
-          degrees_with_minutes(leg.gc_bearing_from(initial_from)),
           "%0.1f" % leg.dist_km,
           "%0.1f" % leg.dist_nm,
           radio,

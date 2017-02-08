@@ -1,0 +1,15 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no", :name => "viewport"}/
+    %title= "NVU PLANNER"
+    :css
+      pre {
+        font-size: .85em;
+        font-family: "Lucida Console", Monaco, "Courier New", Courier, monospace;
+      }
+  %body
+    = yield
