@@ -10,7 +10,10 @@ class NVUPrinter
     magdec_from = first_wpt.magnetic_variation
     magdec_to = last_wpt.magnetic_variation
     merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
-    fork_magnetic = merc_mag = magdec_from - magdec_to - merc
+    fork_magnetic = magdec_from - magdec_to - merc
+    if fork_magnetic.abs > 180
+      fork_magnetic = (fork_magnetic % 180) * (fork_magnetic / fork_magnetic)
+    end
 
     target.puts "MEDIAN TKS 𝞅 %0.1f, TKS ADJUSTMENT FORK %0.1f" % [median_phi, fork_magnetic]
     
@@ -32,7 +35,7 @@ class NVUPrinter
         from, to = leg.from, leg.to
         gc_bearing = leg.gc_bearing_from(initial_from)
         row = [
-          '% 6s TO %s' % [from.ident, to.ident],
+          '% 6s %s' % [from.ident, to.ident],
           "%s / %s" % [degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from)), degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from - magdec_to))],
           "%0.1f" % leg.dist_km,
         ]

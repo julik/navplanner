@@ -14,6 +14,7 @@ module PlanPrinter
   
       t << %w(
         LEG
+        DEST.LAT/LON
         TK.OUTB(TRUE)
         TK.INB(TRUE)
         DIST(KM)
@@ -31,7 +32,8 @@ module PlanPrinter
         end
     
         t << [
-          '%s TO %s' % [from.ident, to.ident],
+          '% 6s %s' % [from.ident, to.ident],
+          '%s %s' % [CoordinateFormatting.latitude(to.lat), CoordinateFormatting.longitude(to.lon)],
           degrees(leg.outbound_tk),
           degrees(leg.inbound_tk),
           "%0.1f" % leg.dist_km,
