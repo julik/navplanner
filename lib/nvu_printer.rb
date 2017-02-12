@@ -1,5 +1,6 @@
 class NVUPrinter
   include CoordinateFormatting
+  
   def print_plan(legs, beacons, target=$stdout)
     target.puts "NVU WAYPOINT LIST"
 
@@ -9,26 +10,26 @@ class NVUPrinter
 
     magdec_from = first_wpt.magnetic_variation
     magdec_to = last_wpt.magnetic_variation
-    merc = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
-    fork_magnetic = magdec_from - magdec_to - merc
+    meridian_convergence_angle = Haversine.meridian_convergence_deg(first_wpt, last_wpt)
+    fork_magnetic = magdec_from - magdec_to - meridian_convergence_angle
     if fork_magnetic.abs > 180
       fork_magnetic = (fork_magnetic % 180) * (fork_magnetic / fork_magnetic)
     end
 
-    target.puts "MEDIAN TKS 𝞅 %0.1f, TKS ADJUSTMENT FORK %0.1f" % [median_phi, fork_magnetic]
+    target.puts t(:header) % [median_phi, fork_magnetic, meridian_convergence_angle]
     
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
   
       t << [
-        'LEG',
-        'OZMPU(DEP/DEST)',
-        'DIST(KM)',
-        'RSBN CORR',
-        'MAP ANGLE',
-        'Zm/Sm',
-        'DEST RADIO',
-        'MAGVAR (FROM/TO)',
+        t(:col_leg),
+        t(:col_ozmpu),
+        t(:col_dist_km),
+        t(:col_rsbn),
+        t(:col_rsbn_map_angle),
+        t(:col_rsbn_offsets),
+        t(:col_radio),
+        t(:col_magvar),
       ]
       t.add_separator
       legs.each do |leg|
@@ -45,10 +46,10 @@ class NVUPrinter
           row += [
             corr_beacon,
             degrees_with_minutes(corr.map_angle),
-            "%0.1f/%0.1f" % [corr.z_km, corr.s_km],
+            "%0.1f / %0.1f" % [corr.z_km, corr.s_km],
           ]
         else
-          row += ['-', '-', '-/-']
+          row += ['-', '-', '- / -']
         end
 
         radio = to.radio? ? to.to_s : '-'
@@ -64,7 +65,11 @@ class NVUPrinter
   
   class DW < Struct.new(:beacon, :distance)
   end
-  
+
+  def t(*a)
+    I18n.translate(*a, scope: :nvu_printer)
+  end
+
   def find_suitable_correction_beacon_for(leg, beacons)
     distances = beacons.map do |bcn|
       # We are in a Tu-154 that flies 10K meters above ground.
@@ -76,7 +81,7 @@ class NVUPrinter
     end
     
     # Cull all the beacons that are too close or too far
-    distances.reject! {|d| d.distance < 50 || d.distance > 600 }
+    distances.reject! {|d| d.distance < 20 || d.distance > 500 }
     return if distances.empty?
     
     closest = distances.min_by(&:distance).beacon

@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'i18n'
 gem 'sinatra'
 gem 'haml'
 gem 'rspec', '~> 3'
