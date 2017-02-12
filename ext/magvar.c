@@ -286,6 +286,8 @@ unsigned long int yymmdd_to_julian_days( int yy, int mm, int dd )
 
 double calc_magvar(double lat, double lon, long dat, double h)
 {
+    lat *= (M_PI / 180);
+    lon *= (M_PI / 180);
     /* output field B_r,B_th,B_phi,B_x,B_y,B_z */
     int n,m;
     /* reference date for current model is 1 januari 2015 */
@@ -428,7 +430,7 @@ double calc_magvar(double lat, double lon, long dat, double h)
     /* return zero variation at magnetic pole X=Y=0. */
     /* E is positive */
 		if (X != 0. || Y != 0.) {
-			return atan2(Y, X);
+			return atan2(Y, X) / (M_PI / 180);
 		} else {
 			return (double) 0.0;
 		}
