@@ -61,7 +61,7 @@ module Haversine
   # Gives the meridian convergence angle that has to be added (or subtracted)
   # when moving from the "from" point to the "to" point
   def meridian_convergence_deg(from, to)
-    bearing = true_bearing(from, to)
+    # bearing = true_bearing(from, to)
     bearing_diff = (from.lon - to.lon) * Math.sin((Haversine.rpd(from.lat) + Haversine.rpd(to.lat)) / 2)
   end
    
