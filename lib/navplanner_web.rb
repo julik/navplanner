@@ -8,7 +8,7 @@ class NavplannerWeb < Sinatra::Base
     haml :index
   end
   
-  post '/compute' do
+  post '/' do
     
     wpt_list = params[:waypoints].to_s
     wpt_list = wpt_list.strip.split(/\s+/).map(&:upcase)
@@ -20,6 +20,8 @@ class NavplannerWeb < Sinatra::Base
     
     # Parse legs from the waypoint list
     legs = Planner.wyaypoint_list_to_legs(db, wpt_list)
+    
+    I18n.locale = :ru
     
     # Print a normal great-circle plan
     @result_fpl = buffer{|b| PlanPrinter.print_plan(legs, b) }

@@ -6,8 +6,7 @@ module PlanPrinter
     total_dist_km = legs.map(&:dist_km).inject(&:+)
     total_dist_nm = legs.map(&:dist_nm).inject(&:+)
 
-    target.puts "FPL NOT FOR REAL NAVIGATION"
-    target.puts "%s > %s (%d KM / %d NM" % [legs.first.from.ident, legs.last.to.ident, total_dist_km, total_dist_nm]
+    target.puts "Plan %s > %s (%d KM / %d NM" % [legs.first.from.ident, legs.last.to.ident, total_dist_km, total_dist_nm]
     
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
