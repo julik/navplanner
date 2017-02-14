@@ -1,0 +1,53 @@
+en:
+  plan_printer:
+    title: "NVU waypoint list"
+    header: "Median TKS 𝞅 %0.1f, fork %0.1f°, meridian convergence %0.1f°"
+    col_leg: "Leg"
+    col_ozmpu: "CAS magnetic dep./arr."
+    col_dist_km: "Distance, km."
+    col_rsbn: "RSBN/SHORAN correction beacon"
+    col_rsbn_map_angle: "RSBN/SHORAN corr. map angle"
+    col_rsbn_offsets: "RSBN/SHORAN corr. Zм/Sm"
+    col_radio: "Radio at destination"
+    col_magvar: "Magnetic variations"
+
+  nvu_printer:
+    title: "NVU waypoint list"
+    header: "Median TKS 𝞅 %0.1f, fork %0.1f°, meridian convergence %0.1f°"
+    col_leg: "Leg"
+    col_ozmpu: "CAS magnetic dep./arr."
+    col_dist_km: "Distance, km."
+    col_rsbn: "RSBN/SHORAN correction beacon"
+    col_rsbn_map_angle: "RSBN/SHORAN corr. map angle"
+    col_rsbn_offsets: "RSBN/SHORAN corr. Zм/Sm"
+    col_radio: "Radio at destination"
+    col_magvar: "Magnetic variations"
+    
+ru:
+  nvu_printer:
+    title: "ЧО для применения НВУ и установка курсовой системы"
+    header: "Средняя 𝞅 курсовой %0.1f, вилка %0.1f°, азимутальная поправка %0.1f°"
+    col_leg: "Участок"
+    col_ozmpu: "ОЗМПУ исх./кон."
+    col_dist_km: "Расстояние, км."
+    col_rsbn: "Корр. РСБН"
+    col_rsbn_map_angle: "Корр. угол карты"
+    col_rsbn_offsets: "Корр. Zм/Sm"
+    col_radio: "Радионавигация"
+    col_magvar: "Магнитные склонения точек"
+  
+# target.puts "MEDIAN TKS 𝞅 %0.1f, TKS ADJUSTMENT FORK %0.1f" % [median_phi, fork_magnetic]
+# 
+# table = Terminal::Table.new do |t|
+#   initial_from = legs.first.from
+# 
+#   t << [
+#     'LEG',
+#     'OZMPU(DEP/DEST)',
+#     'DIST(KM)',
+#     'RSBN CORR',
+#     'MAP ANGLE',
+#     'Zm/Sm',
+#     'DEST RADIO',
+#     'MAGVAR (FROM/TO)',
+#   ]
