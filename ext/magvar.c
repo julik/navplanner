@@ -553,7 +553,6 @@ double SGMagVarOrig( double lat, double lon, double h, long dat, double* field )
 }
 #endif // TEST_NHV_HACKS
 
-
 #include <ruby.h>
 
 /* lat/lon:: decimal radians (S and W are negative)
@@ -561,19 +560,20 @@ double SGMagVarOrig( double lat, double lon, double h, long dat, double* field )
  * jd:: Julian date
  * Returns a two-element array, [var, dip] (radians)
  */
-static VALUE rb_magvar(VALUE self, VALUE radian_lat, VALUE radian_lon, VALUE alt_mtr_msl)
+static VALUE rb_magvar(VALUE self, VALUE deg_lat, VALUE deg_lon, VALUE elev_km_msl, VALUE at_time)
 {
-    double clat = NUM2DBL(radian_lat);
-    double clon = NUM2DBL(radian_lon);
-    double calt = NUM2DBL(alt_mtr_msl);
-    
-    // Assume X-Plane magvar date to be 2020-1-1
-    long cjd = yymmdd_to_julian_days(20, 1, 1);
-    
-    // Compute the variation
-    double var = calc_magvar(clat, clon, cjd, calt);
-
-    return rb_float_new(var);
+    int yy = FIX2INT(rb_funcall(at_time, rb_intern("year"), 0));
+    // The year argument is not a full int but the decimal part (17 for 2017, 99 for 1999 etc)
+    if (yy > 20) {
+      yy -= 1900;
+    } else {
+      yy -= 2000;
+    }
+    int mm = FIX2INT(rb_funcall(at_time, rb_intern("month"), 0));
+    int dd = FIX2INT(rb_funcall(at_time, rb_intern("day"), 0));
+    unsigned long cjd = yymmdd_to_julian_days(yy, mm, dd);
+    double mv_deg = calc_magvar(NUM2DBL(deg_lat), NUM2DBL(deg_lon), cjd, NUM2DBL(elev_km_msl));
+    return rb_float_new(mv_deg);
 }
 
 /* Magnetic variation calculation, using the code from SimGear
@@ -581,5 +581,5 @@ static VALUE rb_magvar(VALUE self, VALUE radian_lat, VALUE radian_lon, VALUE alt
 void Init_magvar() {
     VALUE mod;
     mod = rb_define_module("Magvar");
-    rb_define_module_function(mod, "variation_at", rb_magvar, 3);
+    rb_define_module_function(mod, "variation_at", rb_magvar, 4);
 }
