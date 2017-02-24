@@ -47,10 +47,7 @@ module Haversine
     # This formula returns quadrant as a SIGN of the result, that is - a bearing of 260
     # will be returned as -100. We account for that.
     deg_pos_or_neg = dpr(Math.atan2(s, c))
-    if deg_pos_or_neg < 0
-      deg_pos_or_neg = 360.0 + deg_pos_or_neg
-    end
-    deg_pos_or_neg
+    normalize(deg_pos_or_neg)
   end
   alias_method :true_bearing, :true_tk_outbound
 
