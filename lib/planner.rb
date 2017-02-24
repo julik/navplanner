@@ -15,7 +15,7 @@ module Planner
       possible_tos = db[to]
       
       raise UnknownWaypoint, "Unknown waypoint #{from}" if possible_froms.empty?
-      raise UnknownWaypoint, "Unknown waypoint #{to}" if possible_froms.empty?
+      raise UnknownWaypoint, "Unknown waypoint #{to}" if possible_tos.empty?
       
       # Do a lookup on all possible legs with these from/to combinations  
       possible_froms.each do |from_pt|
