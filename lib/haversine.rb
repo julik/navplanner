@@ -36,13 +36,8 @@ module Haversine
   def dpr(num)
     num / RAD_PER_DEG
   end
-  
-  def magvar_at(pt)
-    magvar_rads = Magvar.magvar(rpd(pt.lat), rpd(pt.lon), Time.utc(2020,1,1), 100)
-    dpr(magvar_rads)
-  end
-  
-  def true_bearing(from, to)
+
+  def true_tk_outbound(from, to)
     lat1, lon1, lat2, lon2 = rpd(from.lat), rpd(from.lon), rpd(to.lat), rpd(to.lon)
     
     deltaL = lon2 - lon1;
@@ -57,12 +52,18 @@ module Haversine
     end
     deg_pos_or_neg
   end
+  alias_method :true_bearing, :true_tk_outbound
+
+  def true_tk_inbound(from, to)
+    normalize(inverse(true_tk_outbound(to, from)))
+  end
   
   # Gives the meridian convergence angle that has to be added (or subtracted)
   # when moving from the "from" point to the "to" point
   def meridian_convergence_deg(from, to)
-    # bearing = true_bearing(from, to)
-    bearing_diff = (from.lon - to.lon) * Math.sin((Haversine.rpd(from.lat) + Haversine.rpd(to.lat)) / 2)
+    # A slightly less precise way:
+    # bearing_diff = (from.lon - to.lon) * Math.sin((Haversine.rpd(from.lat) + Haversine.rpd(to.lat)) / 2)
+    true_tk_outbound(from, to) - true_tk_inbound(from, to)
   end
    
   def inverse(deg)
