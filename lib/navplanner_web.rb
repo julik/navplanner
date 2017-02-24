@@ -4,12 +4,18 @@ require 'thread'
 
 class NavplannerWeb < Sinatra::Base
   set :views, File.join(__dir__, "web_app_views")
+
+  before do
+    lang_code = params[:lang] || :en
+    $stderr.puts "Setting locale %s" % lang_code
+    I18n.locale = lang_code
+  end
+
   get '/' do
     haml :index
   end
   
   post '/' do
-    
     wpt_list = params[:waypoints].to_s
     wpt_list = wpt_list.strip.split(/\s+/).map(&:upcase)
     @parsed_wpt_list = wpt_list.join(' ')
@@ -21,18 +27,19 @@ class NavplannerWeb < Sinatra::Base
     # Parse legs from the waypoint list
     legs = Planner.wyaypoint_list_to_legs(db, wpt_list)
     
-    I18n.locale = :ru
-    
     # Print a normal great-circle plan
     @result_fpl = buffer{|b| PlanPrinter.print_plan(legs, b) }
     
     # Print a palette report for NVU use
     beacon_list = db.of_class(RSBN)
     @result_nvu = buffer{|b| NVUPrinter.new.print_plan(legs, beacon_list, b) }
-    
+
+    # Print a plan for NAS-1
+    @result_nas = buffer{|b| NAS1Printer.new.print_plan(legs, b) }
+
     # Print a plan that can be loaded into the KLN
     @result_kln = buffer{|b| XPFMSPrinter.print_plan(legs, b) }
-
+    
     haml :index
   end
   
@@ -47,7 +54,11 @@ class NavplannerWeb < Sinatra::Base
       end
     end
   end
-  
+
+  def t(*a)
+    I18n.translate(*a, scope: :web)
+  end
+
   def buffer
     out = StringIO.new
     yield(out)

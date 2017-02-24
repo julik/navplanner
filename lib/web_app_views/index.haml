@@ -1,23 +1,30 @@
 %form{method: 'POST'}
-	%label{for: :waypoints} Enter the waypoints separated by whitespace
-	%br
-	%textarea{name: :waypoints, placeholder: 'UUWW BITSA GAMDI MB UWGG'} #{@parsed_wpt_list}
-	%p Note that airways are currently not supported
-	%button= "Compute plan"
+  %label{for: :lang}
+    = t(:lang)
+    %select{name: :lang}
+      %option{value: :en, selected: params[:lang] == 'en' } English
+      %option{value: :ru, selected: params[:lang] == 'ru' } Русский
+  %br
+  %label{for: :waypoints}
+    = t(:enter_wpts)
+    %small= t(:awys_not_supported)
+  %br
+  %textarea{name: :waypoints, placeholder: 'UUWW BITSA GAMDI MB UWGG'}= @parsed_wpt_list
+  %button= t(:compute_plan)
 
 -if @result_fpl
-	%h2 Computed flight plan
-	%code
-		%pre #{@result_fpl}
+  %h2= t(:computed_flight_plan)
+  %code
+    %pre= @result_fpl
 
 -if @result_nvu
-	%h2 Computed courses for the NVU
-	%p To reduce clutter, replan a few times with some intermediate waypoints removed
-	%code
-		%pre #{@result_nvu}
-			
+  %h2= t(:nvu_title)
+  %p= t(:nvu_declutter)
+  %code
+    %pre= @result_nvu
+
 -if @result_kln
-	%h2 Contents of the .fms file for the KLN90B (paste and save to <XP10DIR>/Output/FMS plans/KLN 90B' with a number)
-	%p Note that the file needs to be present in the directory before the sim is started
-	%code
-		%pre #{@result_kln}
+  %h2= t(:kln_title)
+  %p= t(:kln_explainer)
+  %code
+    %pre= @result_kln

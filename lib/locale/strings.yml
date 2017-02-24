@@ -1,4 +1,15 @@
 en:
+  web:
+    lang: "Language"
+    enter_wpts: "Enter the waypoints separated by whitespace"
+    awys_not_supported: "Note that airways are currently not supported"
+    compute_plan: "Compute plan"
+    computed_flight_plan: "Computed flight plan"
+    nvu_title: "Computed courses for the NVU"
+    nvu_declutter: "To reduce clutter, replan a few times with some intermediate waypoints removed"
+    kln_title: ".fms file for the KLN90B"
+    kln_explainer:  "Paste and save to <XP10DIR>/Output/FMS plans/KLN 90B with a number (25.fms etc)"
+
   plan_printer:
     title: "NVU waypoint list"
     header: "Median TKS 𝞅 %0.1f, fork %0.1f°, meridian convergence %0.1f°"
@@ -33,6 +44,17 @@ en:
     col_magvar: "Magnetic variations"
 
 ru:
+  web:
+    lang: "Язык"
+    enter_wpts: "Введите точки маршрута, разделенные пробелами (имена точек латиницей)"
+    awys_not_supported: "Идентификаторы трасс не поддерживаются"
+    compute_plan: "Рассчитать план"
+    computed_flight_plan: "План полета"
+    nvu_title: "НВУ и ТКС"
+    nvu_declutter: "Для уменьшения количества ЧО пересчитайте план пару раз, убирая промежуточные точки"
+    kln_title: ".fms файл для KLN90B"
+    kln_explainer:  "Содержимое следует скопировать в файл и сохранить в <XP10DIR>/Output/FMS plans/KLN 90B под номером 01-25 (14.fms и так далее)"
+  
   nvu_printer:
     title: "ЧО НВУ и установка курсовой системы"
     header: "Средняя 𝞅 курсовой %0.1f, магнитная вилка %0.1f°, азимутальная поправка %0.1f°"
