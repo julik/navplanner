@@ -2,7 +2,7 @@ class NVUPrinter
   include CoordinateFormatting
   
   def print_plan(legs, beacons, target=$stdout)
-    target.puts "NVU WAYPOINT LIST"
+    target.puts t(:title)
 
     first_wpt, last_wpt = legs[0].from, legs[-1].to
 
@@ -55,7 +55,7 @@ class NVUPrinter
         radio = to.radio? ? to.to_s : '-'
         row << radio
 
-        row << "%s - %s" % [decimal_degrees(from.magnetic_variation), decimal_degrees(to.magnetic_variation)]
+        row << "%s / %s" % [decimal_degrees(from.magnetic_variation), decimal_degrees(to.magnetic_variation)]
 
         t << row
       end
