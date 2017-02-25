@@ -13,15 +13,15 @@ describe Leg do
   end
   
   it 'computes the outbound track from departure point' do
-    expect(leg.outbound_tk).to be_within(0.00000001).of(8.249672361301773)
+    expect(leg.outbound_tk).to be_within(0.01).of(8.249672361301773)
   end
 
   it 'computes the inbound track to arrival point' do
-    expect(leg.inbound_tk).to be_within(0.00000001).of(8.902308698649506)
+    expect(leg.inbound_tk).to be_within(0.01).of(8.902308698649506)
   end
 
   it 'computes meridian convergence' do
-    expect(leg.meridian_convergence_deg).to be_within(0.00000001).of(-0.652582544)
+    expect(leg.meridian_convergence_deg).to be_within(0.01).of(-0.652)
   end
   
   it 'provides a usable to_s' do
