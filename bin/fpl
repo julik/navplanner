@@ -8,6 +8,8 @@ pln = ARGV.to_a
 raise "No waypoints given (give them as commandline args)" if pln.empty?
 raise "Need at least 2 waypoints" if pln.length < 2
 
+I18n.locale = :ru
+
 xp_path = ENV.fetch('X_PLANE_INSTALL_PATH') { File.join(__dir__, '/../spec/test_xp_data_20170129') }
 parser = ParserLoader.new(xp_path)
 
@@ -21,6 +23,11 @@ PlanPrinter.print_plan(legs, $stdout)
 beacon_list = db.of_class(RSBN)
 NVUPrinter.new.print_plan(legs, beacon_list, $stdout)
 
-File.open(File.join(xp_path, 'Output/FMS plans/KLN 90B/25.fms'), 'wb') do |f|
-  XPFMSPrinter.print_plan(legs, f)
+begin
+  File.open(File.join(xp_path, 'Output/FMS plans/KLN 90B/25.fms'), 'wb') do |f|
+    XPFMSPrinter.print_plan(legs, f)
+  end
+rescue Errno::ENOENT
 end
+
+NAS1Printer.new.print_plan(legs, $stdout)
