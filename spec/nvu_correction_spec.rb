@@ -15,7 +15,7 @@ describe NVUCorrection do
     corr = NVUCorrection.compute(leg, beacon)
 
     expect(corr.map_angle).to be_within(0.05).of(20.90599003839904)
-    expect(corr.s_km).to be_within(0.05).of(-197.45)
+    expect(corr.s_km).to be_within(0.05).of(-197.36)
     expect(corr.z_km).to be_within(0.05).of(538.25)
   end
 end

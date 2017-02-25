@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Haversine do
   describe 'true tracks and meridian convergence angle' do
     it 'computes transpolar' do
-      murmansk = OpenStruct.new(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
-      provideniya = OpenStruct.new(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
+      murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
+      provideniya = double(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
       tk_out = Haversine.true_tk_outbound(murmansk, provideniya)
       expect(tk_out).to be_within(0.05).of(15.38)
       
@@ -16,8 +16,8 @@ describe Haversine do
     end
     
     it 'computes E' do
-      murmansk = OpenStruct.new(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
-      svalbard = OpenStruct.new(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
+      murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
+      svalbard = double(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
       
       tk_out = Haversine.true_tk_outbound(murmansk, svalbard)
       expect(tk_out).to be_within(0.05).of(340.71)
@@ -30,8 +30,8 @@ describe Haversine do
     end
 
     it 'computes W' do
-      murmansk = OpenStruct.new(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
-      svalbard = OpenStruct.new(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
+      murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
+      svalbard = double(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
       
       tk_out = Haversine.true_tk_outbound(svalbard, murmansk)
       expect(tk_out).to be_within(0.05).of(144.07)
@@ -44,8 +44,8 @@ describe Haversine do
     end
     
     it 'computes E when crossing the international date line' do
-      anadyr = OpenStruct.new(lat: 64.734956445, lon: 177.74154393999999, ident: 'UHMA')
-      provideniya = OpenStruct.new(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
+      anadyr = double(lat: 64.734956445, lon: 177.74154393999999, ident: 'UHMA')
+      provideniya = double(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
 
       tk_out = Haversine.true_tk_outbound(anadyr, provideniya)
       expect(tk_out).to be_within(0.05).of(91.36)
@@ -58,8 +58,8 @@ describe Haversine do
     end
     
     it 'computes W when crossing the international date line' do
-      anadyr = OpenStruct.new(lat: 64.734956445, lon: 177.74154393999999, ident: 'UHMA')
-      provideniya = OpenStruct.new(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
+      anadyr = double(lat: 64.734956445, lon: 177.74154393999999, ident: 'UHMA')
+      provideniya = double(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
 
       tk_out = Haversine.true_tk_outbound(provideniya, anadyr)
       expect(tk_out).to be_within(0.05).of(279.50)
