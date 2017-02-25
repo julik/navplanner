@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 describe Haversine do
+  describe 'distance in radians' do
+    it 'computes the correct distance' do
+      murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
+      provideniya = double(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
+      dist_rad = Haversine.distance(murmansk, provideniya)
+      expect(dist_rad).to be_within(0.01).of(0.795)
+      
+      svalbard = double(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
+      dist_rad = Haversine.distance(murmansk, svalbard)
+      expect(dist_rad).to be_within(0.01).of(0.184)
+    end
+  end
+  
   describe 'true tracks and meridian convergence angle' do
     it 'computes transpolar' do
       murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")

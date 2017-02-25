@@ -4,8 +4,6 @@ module Haversine
   RAD_PER_DEG = Math::PI / 180
   GREAT_CIRCLE_RADIUS_MILES = 3956
   GREAT_CIRCLE_RADIUS_KILOMETERS = 6371 # some algorithms use 6367
-  GREAT_CIRCLE_RADIUS_FEET = GREAT_CIRCLE_RADIUS_MILES * 5280
-  GREAT_CIRCLE_RADIUS_METERS = GREAT_CIRCLE_RADIUS_KILOMETERS * 1000
   GREAT_CIRCLE_RADIUS_NAUTICAL_MILES = GREAT_CIRCLE_RADIUS_MILES / 1.15078
   
   def rad_to_nm(dist_rads)
@@ -16,15 +14,16 @@ module Haversine
     (dist_rads * GREAT_CIRCLE_RADIUS_KILOMETERS)
   end
   
-  # given two lat/lon points, compute the distance between the two points using the haversine formula
+  # Given two lat/lon points, compute the distance between the two points using the haversine formula,
+  # and return the result in radians
   def distance(from, to)
-    lat1, lon1 = from.lat, from.lon
-    lat2, lon2 = to.lat, to.lon
+    lat1, lon1 = rpd(from.lat), rpd(from.lon)
+    lat2, lon2 = rpd(to.lat), rpd(to.lon)
     
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
-    a = (Math.sin(rpd(dlat)/2))**2 + Math.cos(rpd(lat1)) * Math.cos((rpd(lat2))) * (Math.sin(rpd(dlon)/2))**2
+    a = Math.sin(dlat/2)**2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon/2)**2
     c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a))
   end
 
