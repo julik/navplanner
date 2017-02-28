@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Haversine do
-  describe 'distance in radians' do
+  describe '.distance - distance in radians' do
     it 'computes the correct distance' do
       murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
       provideniya = double(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
@@ -14,7 +14,7 @@ describe Haversine do
     end
   end
   
-  describe 'true tracks and meridian convergence angle' do
+  describe '.true_tk_inbound and .true_tk_outbound - true tracks and meridian convergence angle' do
     it 'computes transpolar' do
       murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
       provideniya = double(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')
