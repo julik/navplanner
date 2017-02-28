@@ -5,6 +5,7 @@ module Haversine
   GREAT_CIRCLE_RADIUS_MILES = 3956
   GREAT_CIRCLE_RADIUS_KILOMETERS = 6371 # some algorithms use 6367
   GREAT_CIRCLE_RADIUS_NAUTICAL_MILES = GREAT_CIRCLE_RADIUS_MILES / 1.15078
+  R = GREAT_CIRCLE_RADIUS_NAUTICAL_MILES
   
   def rad_to_nm(dist_rads)
     (dist_rads * GREAT_CIRCLE_RADIUS_NAUTICAL_MILES)
@@ -27,6 +28,14 @@ module Haversine
     c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a))
   end
 
+  def distance_km(from, to)
+    distance(from, to) * GREAT_CIRCLE_RADIUS_KILOMETERS
+  end
+  
+  def distance_nm(from, to)
+    distance(from, to) * GREAT_CIRCLE_RADIUS_NAUTICAL_MILES
+  end
+  
   # Radians per degree
   def rpd(num)
     num * RAD_PER_DEG
@@ -36,6 +45,20 @@ module Haversine
     num / RAD_PER_DEG
   end
 
+  def at_radial_offset(from_pt, bearing_deg, by_dist_nm)
+    φ1 = rpd(from_pt.lat)
+    λ1 = rpd(from_pt.lon)
+    brng = rpd(bearing_deg)
+    d = by_dist_nm
+    
+    φ2 = Math.asin( Math.sin(φ1)*Math.cos(d/R) +
+                        Math.cos(φ1)*Math.sin(d/R)*Math.cos(brng))
+    λ2 = λ1 + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(φ1),
+                             Math.cos(d/R)-Math.sin(φ1)*Math.sin(φ2))
+                             
+    [dpr(φ2), dpr(λ2)]
+  end
+  
   def true_tk_outbound(from, to)
     lat1, lon1, lat2, lon2 = rpd(from.lat), rpd(from.lon), rpd(to.lat), rpd(to.lon)
     
@@ -66,6 +89,10 @@ module Haversine
     normalize(deg + 180.0)
   end
 
+  def normalize_lon(deg_lon)
+    (deg_lon+540) % 360 - 180
+  end
+  
   def normalize(deg)
     deg = deg % 360.0
     if deg < 0

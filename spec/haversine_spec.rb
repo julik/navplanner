@@ -14,6 +14,59 @@ describe Haversine do
     end
   end
   
+  describe '.distance_km' do
+    it 'computes in kilometers' do
+      murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
+      svalbard = double(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
+    
+      dist_km = Haversine.distance_km(murmansk, svalbard)
+      expect(dist_km).to be_within(0.05).of(1174.446)
+    end
+  end
+
+  describe '.distance_nm' do
+    it 'computes in nautical miles' do
+      murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
+      svalbard = double(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
+    
+      dist_nm = Haversine.distance_nm(murmansk, svalbard)
+      expect(dist_nm).to be_within(0.05).of(633.708)
+    end
+  end
+  
+  describe 'at_radial_offset(from_pt, bearing_deg, by_dist_nm)' do
+    it 'computes the same location, to the dot' do
+      murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
+      svalbard = double(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
+    
+      dist_nm = Haversine.distance_nm(murmansk, svalbard)
+      expect(dist_nm).to be_within(0.05).of(633.70)
+
+      brg_deg = Haversine.true_tk_outbound(murmansk, svalbard)
+      expect(brg_deg).to be_within(0.05).of(340.71)
+    
+      offset_lat, offset_lon = Haversine.at_radial_offset(murmansk, brg_deg, dist_nm)
+      expect(offset_lat).to be_within(0.00005).of(svalbard.lat)
+      expect(offset_lon).to be_within(0.00005).of(svalbard.lon)
+    end
+    
+    it 'computes the same location when negative angles are used' do
+      murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
+      svalbard = double(lat: 78.24622447, lon: 15.46383676, ident: "ENSB", name: "Svalbard Longyear")
+    
+      dist_nm = Haversine.distance_nm(murmansk, svalbard)
+      expect(dist_nm).to be_within(0.05).of(633.70)
+
+      brg_deg = Haversine.true_tk_outbound(murmansk, svalbard)
+      brg_deg -= 360
+      expect(brg_deg).to be_within(0.05).of(-19.284)
+    
+      offset_lat, offset_lon = Haversine.at_radial_offset(murmansk, brg_deg, dist_nm)
+      expect(offset_lat).to be_within(0.00005).of(svalbard.lat)
+      expect(offset_lon).to be_within(0.00005).of(svalbard.lon)
+    end
+  end
+  
   describe '.true_tk_inbound and .true_tk_outbound - true tracks and meridian convergence angle' do
     it 'computes transpolar' do
       murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
