@@ -1,3 +1,5 @@
+require 'magvar'
+
 module PointInfo
   def elev_km
     10.0 # 10000 mtr above MSL is ~ standard cruise altitude for a Tu-154
@@ -8,7 +10,7 @@ module PointInfo
   end
   
   def magnetic_variation
-    Magvar.variation_at(lat, lon, elev_km, Time.utc(2020,1,1))
+    Magvar.variation_at(lat, lon, elev_km, magvar_on_day = Time.utc(2020,1,1))
   end
 end
 
