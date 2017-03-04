@@ -15,7 +15,6 @@ coverage.*
 *.rbc
 .idea
 .yardoc
-Gemfile.lock
 **/*.log
 .ruby-version
 scratchpad
