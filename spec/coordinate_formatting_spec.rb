@@ -22,7 +22,7 @@ describe CoordinateFormatting do
       expect(CoordinateFormatting.latitude(lat2)).to eq("S89°19′12″")
     end
     
-    it 'flips the latitude at poles' do
+    it 'does not flip the latitude at poles but uses a modulo' do
       lat1 = 95.56897
       expect(CoordinateFormatting.latitude(lat1)).to eq("N84°25′51″")
       
