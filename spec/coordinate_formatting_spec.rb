@@ -19,7 +19,7 @@ describe CoordinateFormatting do
       expect(CoordinateFormatting.latitude(lat1)).to eq("N14°34′08″")
       
       lat2 = -89.32
-      expect(CoordinateFormatting.latitude(lat2)).to eq("S89°19′11″")
+      expect(CoordinateFormatting.latitude(lat2)).to eq("S89°19′12″")
     end
     
     it 'flips the latitude at poles' do
@@ -27,7 +27,7 @@ describe CoordinateFormatting do
       expect(CoordinateFormatting.latitude(lat1)).to eq("N84°25′51″")
       
       lat2 = -128.32
-      expect(CoordinateFormatting.latitude(lat2)).to eq("S51°40′48″")
+      expect(CoordinateFormatting.latitude(lat2)).to eq("S51°40′47″")
     end
   end
 
