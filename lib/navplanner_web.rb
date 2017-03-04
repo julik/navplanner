@@ -8,7 +8,6 @@ class NavplannerWeb < Sinatra::Base
   
   before do
     lang_code = params[:lang] || :en
-    $stderr.puts "Setting locale %s" % lang_code
     I18n.locale = lang_code
   end
 
