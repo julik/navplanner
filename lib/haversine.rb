@@ -80,8 +80,7 @@ module Haversine
   # Gives the meridian convergence angle that has to be added (or subtracted)
   # when moving from the "from" point to the "to" point
   def meridian_convergence_deg(from, to)
-    # A slightly less precise way:
-    # bearing_diff = (from.lon - to.lon) * Math.sin((Haversine.rpd(from.lat) + Haversine.rpd(to.lat)) / 2)
+    return 0.0 if distance_nm(from, to) < 0.001
     true_tk_outbound(from, to) - true_tk_inbound(from, to)
   end
    
