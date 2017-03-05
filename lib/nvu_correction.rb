@@ -1,16 +1,24 @@
 require_relative 'haversine'
 require_relative 'leg'
+require 'thread'
 
 class NVUCorrection < Struct.new(:beacon, :map_angle, :s_km, :z_km)
   BeaconDist = Struct.new(:beacon, :distance) # A tule of beacon and distance we can use to sort on
-
+  MUX = Mutex.new
+  
   def self.compute_automatically(leg)
-    # Parse and load the RSBN file
-    loader = ParserLoader.new(__dir__)
-    beacons = []
-    loader.parse_rsbn(beacons)
     
-    distances = beacons.map do |bcn|
+    MUX.synchronize do
+      @beacons ||= begin
+        # Parse and load _just_ the RSBN file
+        loader = ParserLoader.new(__dir__)
+        beacons = []
+        loader.parse_rsbn(beacons)
+        beacons
+      end
+    end
+    
+    distances = @beacons.map do |bcn|
       surface_distance = Haversine.rad_to_km(Haversine.distance(leg.to, bcn))
       # We are in a Tu-154 that flies 10K meters above ground.
       # A good idea to take the altitude into account as well.

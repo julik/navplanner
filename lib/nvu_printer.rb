@@ -5,7 +5,10 @@ class NVUPrinter
     target.puts t(:title)
 
     first_wpt, last_wpt = legs[0].from, legs[-1].to
-
+    pts = (legs.map(&:from) + legs.map(&:to)).uniq
+    pts.each do |ptt|
+      puts ptt.inspect
+    end
     median_phi = Haversine.dpr((Haversine.rpd(first_wpt.lat) + Haversine.rpd(last_wpt.lat)) / 2)
 
     magdec_from = first_wpt.magnetic_variation
@@ -19,8 +22,6 @@ class NVUPrinter
     target.puts t(:header) % [median_phi, fork_magnetic, meridian_convergence_angle]
     
     table = Terminal::Table.new do |t|
-      initial_from = legs.first.from
-  
       t << [
         t(:col_leg),
         t(:col_ozmpu),
@@ -34,17 +35,16 @@ class NVUPrinter
       t.add_separator
       legs.each do |leg|
         from, to = leg.from, leg.to
-        gc_bearing = leg.gc_bearing_from(initial_from)
+        gc_bearing = leg.gc_bearing_from(first_wpt)
         row = [
           '% 6s %s' % [from.ident, to.ident],
           "%s / %s" % [degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from)), degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from - magdec_to))],
           "%0.1f" % leg.dist_km,
         ]
         
-        if corr_beacon = find_suitable_correction_beacon_for(leg, beacons)
-          corr = NVUCorrection.compute(leg, corr_beacon)
+        if corr = NVUCorrection.compute_automatically(leg)
           row += [
-            corr_beacon,
+            corr.beacon,
             degrees_with_minutes(corr.map_angle),
             "%0.1f / %0.1f" % [corr.z_km, corr.s_km],
           ]
@@ -68,22 +68,5 @@ class NVUPrinter
 
   def t(*a)
     I18n.translate(*a, scope: :nvu_printer)
-  end
-
-  def find_suitable_correction_beacon_for(leg, beacons)
-    distances = beacons.map do |bcn|
-      # We are in a Tu-154 that flies 10K meters above ground.
-      # A good idea to take the altitude into account as well.
-      surface_distance = Haversine.rad_to_km(Haversine.distance(leg.to, bcn))
-      alt_from_beacon = (10100 - bcn.elev_mtr) / 1000.0
-      reception_distance = Math.sqrt(alt_from_beacon ** 2 + surface_distance ** 2)
-      DW.new(bcn, reception_distance)
-    end
-    
-    # Cull all the beacons that are too close or too far
-    distances.reject! {|d| d.distance < 20 || d.distance > 500 }
-    return if distances.empty?
-    
-    closest = distances.min_by(&:distance).beacon
   end
 end

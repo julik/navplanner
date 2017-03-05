@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe NVUPrinter do
-  it 'prints a predefined flight plan' do
+  it 'prints a predefined flight plan ULMM to UNSB' do
     wpts = []
     wpts << APT.new(lat=68.781751845, lon=32.752029995, ident="ULMM", name="Murmansk")
     wpts << NDB.new(lat=68.743333, lon=32.818333, ident="RD", name="MURMANSK NDB", elev_ft=0.0, freq_int=635, reception_range_nm=80.0)
@@ -39,6 +39,6 @@ describe NVUPrinter do
     p.print_plan(legs, beacon_list, out)
     
     I18n.locale = :ru
-    p.print_plan(legs, beacon_list, out)
+    p.print_plan(legs, beacon_list, $stdout)
   end
 end
