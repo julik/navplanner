@@ -5,10 +5,6 @@ class NVUPrinter
     target.puts t(:title)
 
     first_wpt, last_wpt = legs[0].from, legs[-1].to
-    pts = (legs.map(&:from) + legs.map(&:to)).uniq
-    pts.each do |ptt|
-      puts ptt.inspect
-    end
     median_phi = Haversine.dpr((Haversine.rpd(first_wpt.lat) + Haversine.rpd(last_wpt.lat)) / 2)
 
     magdec_from = first_wpt.magnetic_variation
