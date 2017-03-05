@@ -13,13 +13,12 @@ class Leg < Struct.new(:from, :to)
   
   def gc_bearing_from(initial_from)
     conv_angle = Haversine.meridian_convergence_deg(initial_from, from)
-    bearing_from = outbound_tk
-    bearing_rel = if bearing_from > 180
-      bearing_from + conv_angle
-    else
-      bearing_from - conv_angle
-    end
-    Haversine.normalize(bearing_rel)
+    Haversine.normalize(conv_angle + outbound_tk)
+  end
+
+  def gc_bearing_to(initial_from)
+    conv_angle = Haversine.meridian_convergence_deg(initial_from, to)
+    Haversine.normalize(conv_angle + inbound_tk)
   end
 
   def meridian_convergence_deg

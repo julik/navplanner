@@ -68,6 +68,11 @@ describe Haversine do
   end
   
   describe '.true_tk_inbound and .true_tk_outbound - true tracks and meridian convergence angle' do
+    it 'returns meridian convergence angle of 0 for very small distances' do
+      magadan = double(lat: 59.910989, lon: 150.7204385)
+      expect(Haversine.meridian_convergence_deg(magadan, magadan)).to be_within(0.1).of(0)
+    end
+    
     it 'computes transpolar' do
       murmansk = double(lat: 68.781751845, lon: 32.752029995, ident: "ULMM")
       provideniya = double(lat: 64.3654753675, lon: -173.23902230750002, ident: 'UHMA')

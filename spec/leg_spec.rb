@@ -28,4 +28,18 @@ describe Leg do
     string_repr = leg.to_s
     expect(string_repr).to eq("BETMA -> UVSAS 8.25° (True), (164 km)")
   end
+  
+  it '#gc_bearing_from computes a relative great circle inbound bearing' do
+    magadan = double(lat: 59.910989, lon: 150.7204385)
+    mebar = double(lat: 60.266667, lon: 151.816667)
+    sesin = double(lat: 63.371667, lon: 165.451111)
+    
+    leg = Leg.new(magadan, mebar)
+    expect(leg.inbound_tk).to be_within(0.01).of(57.4255)
+    expect(leg.gc_bearing_from(magadan)).to be_within(0.01).of(56.4752)
+
+    leg = Leg.new(mebar, sesin)
+    expect(leg.inbound_tk).to be_within(0.01).of(70.3819)
+    expect(leg.gc_bearing_from(magadan)).to be_within(0.01).of(57.3971)
+  end
 end
