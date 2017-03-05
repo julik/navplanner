@@ -1,6 +1,16 @@
 require 'spec_helper'
 
 describe NVUCorrection do
+  it 'automatically computes the correction to the closest beacon' do
+    usama = double(lat: 64.75, lon: 175.85)
+    uhma = double(lat: 64.734956445, lon: 177.74154394)
+    leg = Leg.new(usama, uhma)
+    correction = NVUCorrection.compute_automatically(leg)
+    
+    expect(correction).not_to be_nil
+    expect(correction.beacon.chan).to eq("24")
+  end
+
   it 'correctly computes the angles' do
     require 'ostruct'
 
