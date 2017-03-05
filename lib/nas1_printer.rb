@@ -39,7 +39,7 @@ class NAS1Printer
         radio = to.radio? ? to.to_s : '-'
         row << radio
 
-        row << "%s / %s" % [decimal_degrees(from.magnetic_variation), decimal_degrees(to.magnetic_variation)]
+        row << "%0.1f / %0.1f" % [from.magnetic_variation, to.magnetic_variation]
 
         t << row
       end
