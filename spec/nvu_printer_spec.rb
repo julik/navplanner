@@ -30,15 +30,13 @@ describe NVUPrinter do
       legs << Leg.new(from, to)
     end
 
-    beacon_list = []
-    ParserLoader.new(__dir__).parse_rsbn(beacon_list)
     out = StringIO.new
     p = NVUPrinter.new
 
     I18n.locale = :en
-    p.print_plan(legs, beacon_list, out)
+    p.print_plan(legs, out)
     
     I18n.locale = :ru
-    p.print_plan(legs, beacon_list, $stdout)
+    p.print_plan(legs, $stdout)
   end
 end

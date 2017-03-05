@@ -11,7 +11,7 @@ class NVUCorrection < Struct.new(:beacon, :map_angle, :s_km, :z_km)
     MUX.synchronize do
       @beacons ||= begin
         # Parse and load _just_ the RSBN file
-        loader = ParserLoader.new(__dir__)
+        loader = ParserLoader.new(__dir__, Logger.new(nil))
         beacons = []
         loader.parse_rsbn(beacons)
         beacons

@@ -1,7 +1,7 @@
 class NVUPrinter
   include CoordinateFormatting
   
-  def print_plan(legs, beacons, target=$stdout)
+  def print_plan(legs, target=$stdout)
     target.puts t(:title)
 
     first_wpt, last_wpt = legs[0].from, legs[-1].to
