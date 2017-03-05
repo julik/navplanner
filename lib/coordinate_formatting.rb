@@ -1,13 +1,6 @@
 module CoordinateFormatting
   extend self
   
-  def decimal_degrees(degrees_float)
-    if degrees_float < 0
-      degrees_float += 360.0
-    end
-    "%03.1f°" % [degrees_float]
-  end
-  
   # For headings and NVU entry
   def degrees_with_minutes(degrees_float)
     if degrees_float < 0
