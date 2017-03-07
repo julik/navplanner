@@ -4,6 +4,8 @@ require 'thread'
 
 class NavplannerWeb < Sinatra::Base
   set :views, File.join(__dir__, "web_app_views")
+  set :show_exceptions, false
+  
   IncorrectPlan = Class.new(StandardError)
   
   before do
@@ -11,6 +13,11 @@ class NavplannerWeb < Sinatra::Base
     I18n.locale = lang_code
   end
 
+  error do |err|
+    @error = err
+    haml :index
+  end
+  
   get '/' do
     haml :index
   end
@@ -20,29 +27,25 @@ class NavplannerWeb < Sinatra::Base
     wpt_list = wpt_list.strip.split(/\s+/).map(&:upcase)
     @parsed_wpt_list = wpt_list.join(' ')
     
-    begin
-      raise IncorrectPlan, "Need at least 2 waypoints" if wpt_list.length < 2
-      db = load_nav_database
+    raise IncorrectPlan, "Need at least 2 waypoints" if wpt_list.length < 2
+    db = load_nav_database
 
-      # Parse legs from the waypoint list. In practice this is the only
-      # phase that can lead to an error.
-      legs = Planner.wyaypoint_list_to_legs(db, wpt_list)
-    
-      # Print a normal great-circle plan
-      @result_fpl = buffer{|b| PlanPrinter.print_plan(legs, b) }
-    
-      # Print a palette report for NVU use
-      beacon_list = db.of_class(RSBN)
-      @result_nvu = buffer{|b| NVUPrinter.new.print_plan(legs, beacon_list, b) }
+    # Parse legs from the waypoint list. In practice this is the only
+    # phase that can lead to an error.
+    legs = Planner.wyaypoint_list_to_legs(db, wpt_list)
+  
+    # Print a normal great-circle plan
+    @result_fpl = buffer{|b| PlanPrinter.print_plan(legs, b) }
+  
+    # Print a palette report for NVU use
+    beacon_list = db.of_class(RSBN)
+    @result_nvu = buffer{|b| NVUPrinter.new.print_plan(legs, b) }
 
-      # Print a plan for NAS-1
-      @result_nas = buffer{|b| NAS1Printer.new.print_plan(legs, b) }
+    # Print a plan for NAS-1
+    @result_nas1 = buffer{|b| NAS1Printer.new.print_plan(legs, b) }
 
-      # Print a plan that can be loaded into the KLN
-      @result_kln = buffer{|b| XPFMSPrinter.print_plan(legs, b) }
-    rescue => planning_error
-      @error = planning_error
-    end
+    # Print a plan that can be loaded into the KLN
+    @result_kln = buffer{|b| XPFMSPrinter.print_plan(legs, b) }
     
     haml :index
   end
