@@ -6,3 +6,4 @@ gem 'haml'
 gem 'rspec', '~> 3'
 gem 'rake', '~> 10'
 gem 'terminal-table'
+gem "sentry-raven"
