@@ -14,6 +14,7 @@ class NavplannerWeb < Sinatra::Base
   end
 
   error do |err|
+    Raven.capture_exception(err)
     @error = err
     haml :index
   end
