@@ -7,6 +7,7 @@ en:
     computed_flight_plan: "Computed flight plan"
     nvu_title: "Computed courses for the NVU"
     nvu_declutter: "To reduce clutter, replan a few times with some intermediate waypoints removed"
+    nas1_title: "Common great circle legs for NCNS (НАС-1)"
     kln_title: ".fms file for the KLN90B"
     kln_explainer:  "Paste and save to <XP10DIR>/Output/FMS plans/KLN 90B with a number (25.fms etc)"
 
@@ -52,6 +53,7 @@ ru:
     computed_flight_plan: "План полета"
     nvu_title: "НВУ и ТКС"
     nvu_declutter: "Для уменьшения количества ЧО пересчитайте план пару раз, убирая промежуточные точки"
+    nas1_title: "План по общей ортодромии НАС-1"
     kln_title: ".fms файл для KLN90B"
     kln_explainer:  "Содержимое следует скопировать в файл и сохранить в <XP10DIR>/Output/FMS plans/KLN 90B под номером 01-25 (14.fms и так далее)"
   
@@ -65,7 +67,7 @@ ru:
     col_rsbn_map_angle: "Корр. угол карты"
     col_rsbn_offsets: "Корр. Zм/Sm"
     col_radio: "Радионавигация"
-    col_magvar: "Магнитные склонения точек"
+    col_magvar: "Магнитные склонения ПМ"
 
   nas1_printer:
     title: "Участки НАС-1б курсы КС-6"
@@ -74,4 +76,4 @@ ru:
     col_map_angle: 'Угол карты НАС-10'
     col_dist_km: 'Расстояние, км.'
     col_radio: 'Радионавигация'
-    col_magvar: "Магнитные склонения точек"
+    col_magvar: "Магнитные склонения ПМ"

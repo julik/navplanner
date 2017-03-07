@@ -12,6 +12,11 @@
   %textarea{name: :waypoints, placeholder: 'UUWW BITSA GAMDI MB UWGG'}= @parsed_wpt_list
   %button= t(:compute_plan)
 
+-if @error
+  %h2 Oops!
+  %code.error
+    %pre= "%s: %s" % [@error.class, @error.message]
+
 -if @result_fpl
   %h2= t(:computed_flight_plan)
   %code
@@ -22,6 +27,11 @@
   %p= t(:nvu_declutter)
   %code
     %pre= @result_nvu
+
+-if @result_nas1
+  %h2= t(:nas1_title)
+  %code
+    %pre= @result_nas1
 
 -if @result_kln
   %h2= t(:kln_title)

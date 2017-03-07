@@ -1,6 +1,3 @@
-
-Dir.glob(__dir__ + '/lib/*.rb').each {|p| require p }
-Dir.glob(__dir__ + '/lib/*.so').each {|p| require p }
-Dir.glob(__dir__ + '/lib/*.bundle').each {|p| require p }
+require __dir__ + '/lib/navplanner'
 
 run NavplannerWeb

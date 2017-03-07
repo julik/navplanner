@@ -1,2 +1,2 @@
-Dir.glob(__dir__ + '/../lib/*.rb').each {|p| require p }
+require_relative __dir__ + '/../lib/navplanner'
 $:.unshift(File.dirname(__FILE__) + '/../lib')
