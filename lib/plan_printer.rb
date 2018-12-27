@@ -3,10 +3,9 @@ require 'terminal-table'
 module PlanPrinter
   extend self
   def print_plan(legs, target=$stdout)
-    total_dist_km = legs.map(&:dist_km).inject(&:+)
     total_dist_nm = legs.map(&:dist_nm).inject(&:+)
 
-    target.puts "Plan %s > %s (%d KM / %d NM" % [legs.first.from.ident, legs.last.to.ident, total_dist_km, total_dist_nm]
+    target.puts "Plan %s > %s (%d NM)" % [legs.first.from.ident, legs.last.to.ident, total_dist_nm]
     
     table = Terminal::Table.new do |t|
       initial_from = legs.first.from
@@ -16,7 +15,6 @@ module PlanPrinter
         DEST.LAT/LON
         TK.OUTB(TRUE)
         TK.INB(TRUE)
-        DIST(KM)
         DIST(NM)
         RADIO
       )
@@ -35,7 +33,6 @@ module PlanPrinter
           '%s %s' % [CoordinateFormatting.latitude(to.lat), CoordinateFormatting.longitude(to.lon)],
           degrees(leg.outbound_tk),
           degrees(leg.inbound_tk),
-          "%0.1f" % leg.dist_km,
           "%0.1f" % leg.dist_nm,
           radio,
           
