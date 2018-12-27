@@ -139,15 +139,17 @@ class ParserLoader
     ]
     parser_threads.map(&:join)
     @logger.info { "Found %d navaids, fixes and airports" % points.length }
-    File.open("cached_nav.marshal", "wb") do |f|
+    marshaled_path = File.expand_path("cached_nav.marshal")
+    File.open(marshaled_path, "wb") do |f|
       f << Marshal.dump(points)
     end
-    @logger.info { "Written the cache" % points.length }
+    @logger.info { "Written #{points.length} airports, navaids and fixes to #{marshaled_path}" }
   end
   
   def load_cache
-    data = File.open("cached_nav.marshal", "rb") {|f| Marshal.load(f.read)}
-    @logger.info {"Loaded %d items from marshaled preparse" % data.length }
+    marshaled_path = File.expand_path("cached_nav.marshal")
+    data = File.open(marshaled_path, "rb") {|f| Marshal.load(f.read)}
+    @logger.info {"Loaded #{data.length} airports, navaids and fixes from #{marshaled_path}"}
     data
   rescue Errno::ENOENT
     parse_and_cache
