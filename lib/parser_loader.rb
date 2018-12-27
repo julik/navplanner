@@ -27,7 +27,6 @@ class ParserLoader
   def parse_navaids(points)
     @detected ||= @lister.detect
     @detected.navaid_files.each do |f|
-      pts_before = points.length
       File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
         @logger.info { "Parsing %s" % f.path }
         
@@ -64,7 +63,6 @@ class ParserLoader
           end
         end
       end
-      @logger.info { "Loaded %d items" % (points.length - pts_before) }
     end
   end
   
@@ -72,7 +70,6 @@ class ParserLoader
     @detected ||= @lister.detect
     @detected.fix_files.each do |f|
       @logger.info { "Parsing %s" % f.path }
-      pts_before = points.length
       File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
         3.times { f.gets }
         while line = f.gets
@@ -81,7 +78,6 @@ class ParserLoader
           points << FIX.new(lat.to_f, lon.to_f, name, name)
         end
       end
-      @logger.info { "Loaded %d items" % (points.length - pts_before) }
     end
   end
   
@@ -89,7 +85,6 @@ class ParserLoader
     @detected ||= @lister.detect
     @detected.airport_files.each do |f|
       @logger.info { "Parsing %s" % f.path }
-      pts_before = points.length
       File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
         3.times { f.gets }
         last_apt = nil
@@ -125,19 +120,23 @@ class ParserLoader
           end
         end
       end
-      @logger.info { "Loaded %d items from %s" % [(points.length - pts_before), f.path] }
     end
   end
 
-  def parse_and_cache
-    points = []
+  def parse_points_from_all_files
+    points_queue = Queue.new
     parser_threads = [
-      Thread.new { parse_navaids(points) },
-      Thread.new { parse_fixes(points) },
-      Thread.new { parse_airports(points) },
-      Thread.new { parse_rsbn(points) },
+      Thread.new { parse_navaids(points_queue) },
+      Thread.new { parse_fixes(points_queue) },
+      Thread.new { parse_airports(points_queue) },
+      Thread.new { parse_rsbn(points_queue) },
     ]
     parser_threads.map(&:join)
+    _points = points_queue.length.times.map { points_queue.pop }
+  end
+
+  def parse_and_cache
+    points = parse_points_from_all_files
     @logger.info { "Found %d navaids, fixes and airports" % points.length }
     marshaled_path = File.expand_path("cached_nav.marshal")
     File.open(marshaled_path, "wb") do |f|
