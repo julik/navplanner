@@ -1,6 +1,8 @@
 require 'logger'
 
 class ParserLoader
+  # Make sure we interpret files we parse as UTF-8
+  FILE_OPEN_MODE_READ_UTF8 = "r:UTF-8"
 
   def initialize(path_to_xplane_dir, logger=Logger.new($stderr))
     @logger = logger
@@ -9,7 +11,7 @@ class ParserLoader
 
   def parse_rsbn(points)
     nav_dat = File.join(__dir__, 'rsbn.dat')
-    File.open(nav_dat, 'rb') do |f|
+    File.open(nav_dat, FILE_OPEN_MODE_READ_UTF8) do |f|
       @logger.info { "Parsing %s" % nav_dat }
       pts_before = points.length
       f.each_line do |line|
@@ -26,7 +28,7 @@ class ParserLoader
     @detected ||= @lister.detect
     @detected.navaid_files.each do |f|
       pts_before = points.length
-      File.open(f.path, 'rb') do |f|
+      File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
         @logger.info { "Parsing %s" % f.path }
         
         3.times { f.gets }
@@ -71,7 +73,7 @@ class ParserLoader
     @detected.fix_files.each do |f|
       @logger.info { "Parsing %s" % f.path }
       pts_before = points.length
-      File.open(f.path, 'rb') do |f|
+      File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
         3.times { f.gets }
         while line = f.gets
           break if line.strip == '99'
@@ -88,7 +90,7 @@ class ParserLoader
     @detected.airport_files.each do |f|
       @logger.info { "Parsing %s" % f.path }
       pts_before = points.length
-      File.open(f.path, 'rb') do |f|
+      File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
         3.times { f.gets }
         last_apt = nil
         defining_lats = []
