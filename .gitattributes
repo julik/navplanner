@@ -1,0 +1,3 @@
+# As per https://github.com/capistrano/capistrano/pull/626
+features/ export-ignore
+spec/ export-ignore
