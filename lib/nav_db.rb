@@ -21,6 +21,6 @@ class NavDB
   end
   
   def [](identifier)
-    @idents[identifier] or raise UnknownPoint, "No waypoints matching %s found" % identifier
+    @idents.fetch(identifier, [])
   end
 end
