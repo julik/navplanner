@@ -30,8 +30,8 @@ class ParserLoader
       File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
         @logger.info { "Parsing %s" % f.path }
         
-        3.times { f.gets }
-        while line = f.gets
+        3.times { gets_utf8(f) }
+        while line = gets_utf8(f)
           break if line.strip == '99'
           parts = line.split(/\s+/)
           type = parts.shift.to_i
@@ -71,8 +71,8 @@ class ParserLoader
     @detected.fix_files.each do |f|
       @logger.info { "Parsing %s" % f.path }
       File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
-        3.times { f.gets }
-        while line = f.gets
+        3.times { gets_utf8(f) }
+        while line = gets_utf8(f)
           break if line.strip == '99'
           lat, lon, name = line.strip.split(/\s+/)
           points << FIX.new(lat.to_f, lon.to_f, name, name)
@@ -80,17 +80,24 @@ class ParserLoader
       end
     end
   end
-  
+
+  def gets_utf8(io)
+    maybe_str = io.gets
+    return unless maybe_str
+    maybe_str.encode(Encoding::UTF_8, invalid: :replace, undef: :replace, replace: '?')
+  end
+
   def parse_airports(points)
     @detected ||= @lister.detect
     @detected.airport_files.each do |f|
       @logger.info { "Parsing %s" % f.path }
-      File.open(f.path, FILE_OPEN_MODE_READ_UTF8) do |f|
-        3.times { f.gets }
+      File.open(f.path, 'rb') do |f|
+        3.times { gets_utf8(f) }
         last_apt = nil
         defining_lats = []
         defining_lons = []
-        while line = f.gets
+        while line = gets_utf8(f)
+          line = line
           break if line.strip == '99'
           parts = line.split(/\s+/)
           if parts[0] == '1'
