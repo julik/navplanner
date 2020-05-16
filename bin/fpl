@@ -2,7 +2,6 @@
 
 Dir.glob(__dir__ + '/../lib/*.rb').each {|p| require p }
 Dir.glob(__dir__ + '/../lib/*.so').each {|p| require p }
-Dir.glob(__dir__ + '/../lib/*.bundle').each {|p| require p }
 
 pln = ARGV.to_a
 raise "No waypoints given (give them as commandline args)" if pln.empty?
