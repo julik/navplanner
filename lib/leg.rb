@@ -26,7 +26,7 @@ class Leg < Struct.new(:from, :to)
   end
 
   def dist_rads
-    @dist ||= Haversine.distance(from, to)
+    @dist ||= Haversine.distance_radians(from, to)
   end
   
   def dist_nm

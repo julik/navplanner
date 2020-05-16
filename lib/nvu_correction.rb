@@ -19,7 +19,7 @@ class NVUCorrection < Struct.new(:beacon, :map_angle, :s_km, :z_km)
     end
     
     distances = @beacons.map do |bcn|
-      surface_distance = Haversine.rad_to_km(Haversine.distance(leg.to, bcn))
+      surface_distance = Haversine.rad_to_km(Haversine.distance_radians(leg.to, bcn))
       # We are in a Tu-154 that flies 10K meters above ground.
       # A good idea to take the altitude into account as well.
       # alt_from_beacon = (10100 - bcn.elev_mtr) / 1000.0

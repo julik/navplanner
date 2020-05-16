@@ -17,7 +17,7 @@ module Haversine
   
   # Given two lat/lon points, compute the distance between the two points using the haversine formula,
   # and return the result in radians
-  def distance(from, to)
+  def distance_radians(from, to)
     lat1, lon1 = rpd(from.lat), rpd(from.lon)
     lat2, lon2 = rpd(to.lat), rpd(to.lon)
     
@@ -29,11 +29,11 @@ module Haversine
   end
 
   def distance_km(from, to)
-    distance(from, to) * GREAT_CIRCLE_RADIUS_KILOMETERS
+    distance_radians(from, to) * GREAT_CIRCLE_RADIUS_KILOMETERS
   end
   
   def distance_nm(from, to)
-    distance(from, to) * GREAT_CIRCLE_RADIUS_NAUTICAL_MILES
+    distance_radians(from, to) * GREAT_CIRCLE_RADIUS_NAUTICAL_MILES
   end
   
   # Radians per degree
