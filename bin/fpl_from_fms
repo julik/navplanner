@@ -2,17 +2,15 @@
 
 Dir.glob(__dir__ + '/../lib/*.rb').each {|p| require p }
 Dir.glob(__dir__ + '/../lib/*.so').each {|p| require p }
-
-pln = ARGV.to_a
-raise "No waypoints given (give them as commandline args)" if pln.empty?
-raise "Need at least 2 waypoints" if pln.length < 2
+Dir.glob(__dir__ + '/../lib/*.bundle').each {|p| require p }
 
 I18n.locale = :ru
+waypoints = XPFMSParser.parse($stdin)
 
 xp_path = ENV.fetch('X_PLANE_INSTALL_PATH') { File.join(__dir__, '/../spec/test_xp_data_20170129') }
 parser = ParserLoader.new(xp_path)
 db = NavDB.new(parser.load_cache)
-legs = Planner.wyaypoint_list_to_legs(db, pln)
+legs = Planner.wyaypoints_to_legs(db, waypoints)
 
 # Print a normal great-circle plan
 PlanPrinter.print_plan(legs, $stdout)
@@ -20,11 +18,5 @@ PlanPrinter.print_plan(legs, $stdout)
 # Print a palette report for NVU use
 NVUPrinter.new.print_plan(legs, $stdout)
 
-begin
-  File.open(File.join(xp_path, 'Output/FMS plans/KLN 90B/25.fms'), 'wb') do |f|
-    XPFMSPrinter.print_plan(legs, f)
-  end
-rescue Errno::ENOENT
-end
-
+# Print for NAS1
 NAS1Printer.new.print_plan(legs, $stdout)

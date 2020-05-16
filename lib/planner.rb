@@ -2,10 +2,24 @@ module Planner
   class UnknownWaypoint < StandardError; end
   
   extend self
+
+  def wyaypoints_to_legs(db, waypoints_from_fms_file)
+    # If we have that point in the database - use that, if not use what the .fms provides
+    waypoints = waypoints_from_fms_file.map do |wpt|
+      closest_fixes = db[wpt.ident]
+      close_enough = closest_fixes.find {|fix| Haversine.distance_km(wpt, fix) < 1 }
+      close_enough || wpt
+    end
+
+    waypoints.each_cons(2).map do |(from_pt, to_pt)|
+      Leg.new(from_pt, to_pt)
+    end
+  end
+
   def wyaypoint_list_to_legs(db, waypoint_names)
     legs = []
     last_resolved_pt = nil
-    each_pair(waypoint_names) do |from, to|
+    waypoint_names.each_cons(2) do |from, to|
       possible_legs = []
       possible_froms = if last_resolved_pt
         [last_resolved_pt]
@@ -31,14 +45,5 @@ module Planner
       legs << shortest_leg
     end
     legs
-  end
-  
-  private
-  
-  def each_pair(of_arr)
-    return if of_arr.length < 2
-    (0..(of_arr.length - 2)).each do |si|
-      yield(of_arr[si], of_arr[si+1])
-    end
   end
 end

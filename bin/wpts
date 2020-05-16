@@ -9,8 +9,8 @@ I18n.locale = :ru
 
 xp_path = ENV.fetch('X_PLANE_INSTALL_PATH') { File.join(__dir__, '/../spec/test_xp_data_20170129') }
 parser = ParserLoader.new(xp_path)
-
 db = NavDB.new(parser.load_cache)
+
 legs = Planner.wyaypoint_list_to_legs(db, wpts)
 wpts = (legs.map(&:from) + legs.map(&:to)).uniq
 wpts.each do |wpt|
