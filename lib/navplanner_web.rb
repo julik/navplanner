@@ -24,17 +24,15 @@ class NavplannerWeb < Sinatra::Base
   end
   
   post '/' do
-    wpt_list = params[:waypoints].to_s
-    wpt_list = wpt_list.strip.split(/\s+/).map(&:upcase)
-    @parsed_wpt_list = wpt_list.join(' ')
-    
-    raise IncorrectPlan, "Need at least 2 waypoints" if wpt_list.length < 2
     db = load_nav_database
 
-    # Parse legs from the waypoint list. In practice this is the only
-    # phase that can lead to an error.
-    legs = Planner.wyaypoint_list_to_legs(db, wpt_list)
-  
+    legs, waypoint_names = if params[:file] && params[:file][:tempfile]
+      parse_legs_from_fms(db)
+    else
+      parse_legs_from_waypoint_list(db)
+    end
+    @parsed_wpt_list = waypoint_names.join(' ')
+
     # Print a normal great-circle plan
     @result_fpl = buffer{|b| PlanPrinter.print_plan(legs, b) }
   
@@ -49,6 +47,24 @@ class NavplannerWeb < Sinatra::Base
     @result_kln = buffer{|b| XPFMSPrinter.print_plan(legs, b) }
     
     haml :index
+  end
+
+  def parse_legs_from_waypoint_list(nav_db)
+    wpt_list = params[:waypoints].to_s
+    wpt_list = wpt_list.strip.split(/\s+/).map(&:upcase)
+    raise IncorrectPlan, "Need at least 2 waypoints" if wpt_list.length < 2
+
+    # Parse legs from the waypoint list. In practice this is the only
+    # phase that can lead to an error.
+    legs = Planner.wyaypoint_list_to_legs(nav_db, wpt_list)
+    [legs, wpt_list]
+  end
+
+  def parse_legs_from_fms(nav_db)
+    fms_file = params[:file][:tempfile]
+    waypoints = XPFMSParser.parse(fms_file)
+    legs = Planner.wyaypoints_to_legs(nav_db, waypoints)
+    [legs, waypoints.map(&:ident)]
   end
 
   DB_CACHE_MUX = Mutex.new

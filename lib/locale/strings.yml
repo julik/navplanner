@@ -2,6 +2,7 @@ en:
   web:
     lang: "Language"
     enter_wpts: "Enter the waypoints separated by whitespace"
+    upload_fms: "Select an .fms file in X-Plane 10/11 format for upload"
     awys_not_supported: "Note that airways are currently not supported"
     compute_plan: "Compute plan"
     computed_flight_plan: "Computed flight plan"
@@ -48,6 +49,7 @@ ru:
   web:
     lang: "Язык"
     enter_wpts: "Введите точки маршрута, разделенные пробелами (имена точек латиницей)"
+    upload_fms: "Загрузите файл .fms в формате X-Plane 10/11"
     awys_not_supported: "Идентификаторы трасс не поддерживаются"
     compute_plan: "Рассчитать план"
     computed_flight_plan: "План полета"

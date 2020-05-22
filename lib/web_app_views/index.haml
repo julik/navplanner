@@ -1,15 +1,21 @@
-%form{method: 'POST'}
+%form{method: 'POST', enctype: 'multipart/form-data'}
   %label{for: :lang}
     = t(:lang)
     %select{name: :lang}
       %option{value: :en, selected: params[:lang] == 'en' } English
       %option{value: :ru, selected: params[:lang] == 'ru' } Русский
   %br
-  %label{for: :waypoints}
-    = t(:enter_wpts)
+
+  %fieldset
+    %legend= t(:enter_wpts)
+    %br
+    %textarea{name: :waypoints, placeholder: 'UUWW BITSA GAMDI MB UWGG'}= @parsed_wpt_list
+    %br
     %small= t(:awys_not_supported)
-  %br
-  %textarea{name: :waypoints, placeholder: 'UUWW BITSA GAMDI MB UWGG'}= @parsed_wpt_list
+  %fieldset
+    %legend= t(:upload_fms)
+    %input{type: 'file', name: 'file'}
+
   %button= t(:compute_plan)
 
 -if @error
