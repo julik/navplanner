@@ -1,0 +1,41 @@
+.
+.git
+.dockerignore
+.byebug_history
+Dockerfile
+
+# Bundler-installed stuff (it gets regenerated inside the image)
+.bundle
+vendor
+
+log/*
+tmp/*
+*.log
+
+# ActiveStorage data
+storage
+
+# Scratchpad
+julik-scratchpad/*
+
+# Node-related stuff
+npm-debug.log
+package-lock.json
+node_modules
+yarn-debug.log*
+yarn-error.log*
+
+cached_nav.marshal
+
+# Project files/envvars
+*.sublime-project
+*.sublime-workspace
+.ruby-gemset
+.ruby-version
+.tm_properties
+.env
+.idea
+.vscode
+
+# Automation scripts
+deploy.sh

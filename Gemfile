@@ -7,3 +7,4 @@ gem 'rspec', '~> 3'
 gem 'rake', '~> 13'
 gem 'terminal-table'
 gem "sentry-raven"
+gem 'puma'
