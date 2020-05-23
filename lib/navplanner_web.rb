@@ -53,7 +53,7 @@ class NavplannerWeb < Sinatra::Base
 
   def with_reduced_abeams(legs)
     if params[:reduce_abeams]
-      LegReducer.reduce(legs, threshold_degrees: 5)
+      LegReducer.reduce(legs, delta_deg: 5)
     else
       legs
     end

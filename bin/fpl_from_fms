@@ -16,7 +16,7 @@ legs = Planner.wyaypoints_to_legs(db, waypoints)
 PlanPrinter.print_plan(legs, $stdout)
 
 # Print a palette report for NVU use
-NVUPrinter.new.print_plan(LegReducer.reduce(legs), $stdout)
+NVUPrinter.new.print_plan(LegReducer.reduce(legs, delta_deg: 5), $stdout)
 
 # Print for NAS1
-NAS1Printer.new.print_plan(LegReducer.reduce(legs), $stdout)
+NAS1Printer.new.print_plan(LegReducer.reduce(legs, delta_deg: 5), $stdout)
