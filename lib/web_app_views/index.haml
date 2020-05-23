@@ -15,6 +15,12 @@
   %fieldset
     %legend= t(:upload_fms)
     %input{type: 'file', name: 'file'}
+  %fieldset
+    %legend= t(:reduce_abeams_legend)
+    %label
+      %input{type: 'checkbox', name: 'reduce_abeams', checked: @reduce_abeams ? "checked" : "no" }
+      =t(:reduce_abeams_label)
+    %p= t(:reduce_abeams_explanation)
 
   %button= t(:compute_plan)
 

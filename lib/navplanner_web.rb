@@ -20,6 +20,7 @@ class NavplannerWeb < Sinatra::Base
   end
   
   get '/' do
+    @reduce_abeams = true
     haml :index
   end
   
@@ -32,21 +33,30 @@ class NavplannerWeb < Sinatra::Base
       parse_legs_from_waypoint_list(db)
     end
     @parsed_wpt_list = waypoint_names.join(' ')
+    @reduce_abeams = params[:reduce_abeams] ? true : false
 
     # Print a normal great-circle plan
     @result_fpl = buffer{|b| PlanPrinter.print_plan(legs, b) }
   
     # Print a palette report for NVU use
     beacon_list = db.of_class(RSBN)
-    @result_nvu = buffer{|b| NVUPrinter.new.print_plan(legs, b) }
+    @result_nvu = buffer{|b| NVUPrinter.new.print_plan(with_reduced_abeams(legs), b) }
 
     # Print a plan for NAS-1
-    @result_nas1 = buffer{|b| NAS1Printer.new.print_plan(legs, b) }
+    @result_nas1 = buffer{|b| NAS1Printer.new.print_plan(with_reduced_abeams(legs), b) }
 
     # Print a plan that can be loaded into the KLN
     @result_kln = buffer{|b| XPFMSPrinter.print_plan(legs, b) }
     
     haml :index
+  end
+
+  def with_reduced_abeams(legs)
+    if params[:reduce_abeams]
+      LegReducer.reduce(legs, threshold_degrees: 5)
+    else
+      legs
+    end
   end
 
   def parse_legs_from_waypoint_list(nav_db)

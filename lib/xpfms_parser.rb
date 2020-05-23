@@ -12,6 +12,10 @@ class XPFMSParser
       Magvar.variation_at(lat, lon, elev_km, magvar_on_day = Time.utc(2020,1,1))
     end
 
+    def to_ruby
+      "#{self.class}.new(#{ident.inspect}, #{altitude_ft.inspect}, #{lat.inspect}, #{lon.inspect})"
+    end
+
     def to_s
       "%s" % [ident]
     end

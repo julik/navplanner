@@ -8,6 +8,20 @@ describe Leg do
     to = double(name: 'UVSAS', lat: 72.083333, lon: 19.7)
     Leg.new(from, to)
   }
+
+  it 'combines multiple legs and adds abeam points' do
+    pt1 = double(name: 'BETMA', lat: 70.623054, lon: 19.011264)
+    pt2 = double(name: 'UVSAS', lat: 72.083333, lon: 19.7)
+    pt3 = double(name: 'TODAD', lat: 74.083333, lon: 28.3)
+    pt4 = double(name: 'UVSAS', lat: 76.124, lon: 32.1)
+
+    combined = Leg.combined(Leg.new(pt1, pt2), Leg.new(pt2, pt3), Leg.new(pt3, pt4))
+
+    expect(combined.from).to eq(pt1)
+    expect(combined.to).to eq(pt4)
+    expect(combined.abeams).to eq([pt2, pt3])
+  end
+
   it 'computes the distance in rads' do
     expect(leg.dist_rads).to be_within(0.00000001).of(0.02577441675)
   end

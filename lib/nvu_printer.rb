@@ -33,7 +33,7 @@ class NVUPrinter
         from, to = leg.from, leg.to
         gc_bearing = leg.gc_bearing_from(first_wpt)
         row = [
-          '% 6s %s' % [from.ident, to.ident],
+          ' %s %s' % [from.ident, to.ident],
           "%s / %s" % [degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from)), degrees_with_minutes(Haversine.normalize(gc_bearing - magdec_from - magdec_to))],
           "%0.1f" % leg.dist_km,
         ]
@@ -48,12 +48,16 @@ class NVUPrinter
           row += ['-', '-', '- / -']
         end
 
-        radio = to.radio? ? to.to_s : '-'
-        row << radio
-
+        row << (to.radio? ? to.to_s : '-')
         row << "%0.1f / %0.1f" % [from.magnetic_variation, to.magnetic_variation]
 
         t << row
+        if leg.abeams.any?
+          leg.abeams.each do |abeam_pt|
+            to_go_km = Haversine.distance_km(abeam_pt, leg.to)
+            t << [" - #{abeam_pt.ident}", "-", "↧ %0.1f" % to_go_km, nil, nil, nil, (abeam_pt.radio? ? abeam_pt.to_s : '-'), nil]
+          end
+        end
       end
     end
     target.puts table
